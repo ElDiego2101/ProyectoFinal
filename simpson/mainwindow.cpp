@@ -10,9 +10,9 @@ MainWindow::MainWindow(QWidget *parent)
     // Crea la vista
     view = new QGraphicsView(this);
     view->setFixedSize(1080, 395);  // Tamaño de la vista visible
-    view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);  // Permite el scroll horizontal
-    view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);   // Deshabilita el scroll vertical
-    view->setAlignment(Qt::AlignTop | Qt::AlignLeft);           // Alinea la vista arriba a la izquierda
+    view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    view->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     view->setRenderHint(QPainter::Antialiasing);
     // Coloca la vista en el widget central
     QWidget *centralWidget = new QWidget(this);

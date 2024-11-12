@@ -39,7 +39,7 @@ void personaje::moverObjeto(){
         if (nextX >= limiteIzquierdo && nextX <= limiteDerecho) {
             bool sobrePlataforma = false;
 
-            // Verificar si el personaje está sobre alguna plataforma
+            // Verificar plataforma
             for (auto plataforma : miEscenario->getPlataformas()) {
                 if (plataforma && plataforma->contains(QPointF(nextX, nextY + alto))) {
                     sobrePlataforma = true;
@@ -47,7 +47,7 @@ void personaje::moverObjeto(){
                 }
             }
 
-            // Si está sobre una plataforma, mover en X e Y
+
             if (sobrePlataforma) {
                 dy = 0;  // Detener la caída
                 x = nextX;
@@ -58,7 +58,7 @@ void personaje::moverObjeto(){
                 y += dy;
             }
 
-            // Actualizar posición en la escena
+            // Actualizar
             objeto->setRect(x, y, ancho, alto);
         }
     }
