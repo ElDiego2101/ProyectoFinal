@@ -1,0 +1,79 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-3f3ba218e0779a96a586.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "simpson",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "simpson::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-simpson-Debug-d0115f206baffac450e2.json",
+					"name" : "simpson",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "simpson_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-simpson_autogen-Debug-f6a2fccb8fb32c9c231e.json",
+					"name" : "simpson_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "simpson_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-simpson_autogen_timestamp_deps-Debug-4fcfa08c9dd66458ad22.json",
+					"name" : "simpson_autogen_timestamp_deps",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/juana/OneDrive/Documentos/simpson/build/Desktop_Qt_6_7_2_MinGW_64_bit-Debug",
+		"source" : "C:/Users/juana/OneDrive/Documentos/simpson"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}
