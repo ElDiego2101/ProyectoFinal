@@ -1,5 +1,10 @@
 #include "escenario.h"
 
+std::array<QGraphicsRectItem *, 3> escenario::getPlataformas() const
+{
+    return plataformas;
+}
+
 escenario::escenario(QGraphicsView *viewPtr):view(viewPtr) {
     plataformas.fill(nullptr);
 }

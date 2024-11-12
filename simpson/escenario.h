@@ -19,6 +19,7 @@ public:
     escenario(QGraphicsView *viewPtr);
     void dibujarEscenario(QGraphicsScene* scene);
     void establecerPlataformas(QGraphicsScene* scene);
+    std::array<QGraphicsRectItem *, 3> getPlataformas() const;
 };
 
 #endif // ESCENARIO_H

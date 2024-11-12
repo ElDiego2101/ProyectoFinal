@@ -4,10 +4,11 @@
 #include <QGraphicsView>
 #include <QGraphicsScene>
 class personaje
-{  escenario* miEscenario;
+{
 
 protected:
     QGraphicsRectItem *objeto;
+    escenario* miEscenario;
     int alto;
     int ancho;
     int dx;
@@ -18,6 +19,7 @@ protected:
     int y;
 public:
     personaje(int x,int y,escenario* esc);
+    void moverObjeto();
 };
 
 #endif // PERSONAJE_H
