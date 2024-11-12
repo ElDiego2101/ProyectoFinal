@@ -7,6 +7,8 @@
 #include <QGraphicsScene>
 #include "escenario.h"
 #include "jugador.h"
+#include <QKeyEvent>
+#include <QTimer>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -22,6 +24,11 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+protected:
+    void keyPressEvent(QKeyEvent *event) override;
+    void keyReleaseEvent(QKeyEvent *event) override;
+private slots:
+    void actualizarMovimiento();
 
 private:
     Ui::MainWindow *ui;

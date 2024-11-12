@@ -1,7 +1,7 @@
 #include "jugador.h"
 
 jugador::jugador(int x,int y,escenario* esc):personaje(x,y,esc) {
-    alto=60;
+    alto=80;
     ancho=20;
 
     //aqui iran los sprites del personaje, no tengo claro si hacer

@@ -1,5 +1,20 @@
 #include "personaje.h"
 
+void personaje::setDx(int newDx)
+{
+    dx = newDx;
+}
+
+void personaje::setIndicey(int newIndicey)
+{
+    indicey = newIndicey;
+}
+
+void personaje::setDy(int newDy)
+{
+    dy = newDy;
+}
+
 personaje::personaje(int x,int y,escenario* esc) {
     this ->x=x;
     this ->y=y;
@@ -17,7 +32,7 @@ void personaje::moverObjeto(){
     int nextY = y + dy;
 
     if (objeto) {
-        // Verificar límites de la escena (por ejemplo, izquierda y derecha)
+        // Verificar límites de la escena
         int limiteIzquierdo = 0;
         int limiteDerecho = 2292 - ancho;
 
@@ -26,7 +41,7 @@ void personaje::moverObjeto(){
 
             // Verificar si el personaje está sobre alguna plataforma
             for (auto plataforma : miEscenario->getPlataformas()) {
-                if (plataforma && plataforma->contains(QPointF(x, y + alto))) {
+                if (plataforma && plataforma->contains(QPointF(nextX, nextY + alto))) {
                     sobrePlataforma = true;
                     break;
                 }
@@ -34,11 +49,12 @@ void personaje::moverObjeto(){
 
             // Si está sobre una plataforma, mover en X e Y
             if (sobrePlataforma) {
+                dy = 0;  // Detener la caída
                 x = nextX;
                 y = nextY;
             } else {
                 // Si no está sobre una plataforma, mover solo hacia abajo
-                dy = 1;  // Incrementa dy para simular caída
+                dy = 1;  // Incrementar para simular caída
                 y += dy;
             }
 

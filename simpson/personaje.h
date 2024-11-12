@@ -20,6 +20,9 @@ protected:
 public:
     personaje(int x,int y,escenario* esc);
     void moverObjeto();
+    void setDx(int newDx);
+    void setIndicey(int newIndicey);
+    void setDy(int newDy);
 };
 
 #endif // PERSONAJE_H
