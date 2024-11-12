@@ -25,6 +25,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
         recursos.qrc
         escenario.h escenario.cpp
+        personaje.h personaje.cpp
+        jugador.h jugador.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET simpson APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

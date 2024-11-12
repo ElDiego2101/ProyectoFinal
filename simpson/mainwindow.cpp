@@ -24,6 +24,8 @@ MainWindow::MainWindow(QWidget *parent)
     miEscenario = new escenario(view);
     miEscenario->dibujarEscenario(scene);
     miEscenario->establecerPlataformas(scene);
+    bobPatiño=new jugador(755*3, 350,miEscenario);
+    bobPatiño->dibujarJugador(scene);
 }
 
 MainWindow::~MainWindow()
@@ -31,4 +33,5 @@ MainWindow::~MainWindow()
     delete ui;
     delete view;
     delete scene;
+    delete bobPatiño;
 }

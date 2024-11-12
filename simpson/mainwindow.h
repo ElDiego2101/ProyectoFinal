@@ -6,6 +6,7 @@
 #include <QVBoxLayout>
 #include <QGraphicsScene>
 #include "escenario.h"
+#include "jugador.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -17,6 +18,7 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
+
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
@@ -27,5 +29,6 @@ private:
     QGraphicsScene* scene;
     QVBoxLayout *layout;
     escenario* miEscenario;
+    jugador* bobPatiño;
 };
 #endif // MAINWINDOW_H
