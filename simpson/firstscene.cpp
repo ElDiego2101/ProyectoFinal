@@ -29,16 +29,20 @@ FirstScene::FirstScene(MainWindow *parent)
 }
 
 void FirstScene::keyPressEvent(QKeyEvent *event) {
+    teclasPresionadas.insert(event->key()); // Registrar la tecla
+
     int velocidad = 5; // Velocidad del desplazamiento
 
     if (event->key() == Qt::Key_A) {
-        velocidadFondo = velocidad;  // Mover a la
+        velocidadFondo = velocidad;
         if ((fondo->x()) > 0) {
             velocidadFondo = 0;
         }
     } else if (event->key() == Qt::Key_D) {
-        velocidadFondo = -velocidad;  // Mover a la derecha
+        velocidadFondo = -velocidad;
     }
+
+    // Movimiento del jugador según tecla
     switch (event->key()) {
     case Qt::Key_D:
         jugador->moverJugador(derecha);
@@ -57,21 +61,29 @@ void FirstScene::keyPressEvent(QKeyEvent *event) {
         jugador->setY(jugador->getY() + 5);
         break;
     }
+
     jugador->setPos(jugador->getX(), jugador->getY());
 }
 
 void FirstScene::keyReleaseEvent(QKeyEvent *event) {
-    if (event->key() == Qt::Key_A || event->key() == Qt::Key_D) {
-        velocidadFondo = 0;  // Detener el movimiento al soltar la tecla
-    }
-    if (event->key() == Qt::Key_D || event->key() == Qt::Key_A ||
-        event->key() == Qt::Key_W || event->key() == Qt::Key_S) {
-        jugador->detenerJugador();
+    teclasPresionadas.remove(event->key()); // Eliminar la tecla liberada
+
+    bool teclaActiva = teclasPresionadas.contains(Qt::Key_A) ||
+                       teclasPresionadas.contains(Qt::Key_D) ||
+                       teclasPresionadas.contains(Qt::Key_W) ||
+                       teclasPresionadas.contains(Qt::Key_S);
+
+    if (!teclaActiva) {
+        // Detener el jugador y la animación solo si no hay teclas activas
+        //jugador->detenerJugador();
+        velocidadFondo = 0; // Detén el movimiento del fondo
     }
 }
 
 void FirstScene::moverFondo() {
     // Actualiza la posición del fondo
+    if (velocidadFondo == 0) return; // No mover si no hay velocidad
+
     int nuevaPosX = fondo->x() + velocidadFondo;
 
     // Limitar el desplazamiento dentro de un rango
@@ -80,7 +92,7 @@ void FirstScene::moverFondo() {
         nuevaPosX = maxDesplazamiento;
     }
 
-    fondo->setX(nuevaPosX);  // Aplica la nueva posición en X al fondo
+    fondo->setX(nuevaPosX); // Aplica la n // Aplica la nueva posición en X al fondo
 }
 void FirstScene::establecerPlataformas(){
     int posicion=0;

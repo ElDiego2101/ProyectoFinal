@@ -7,6 +7,7 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsRectItem>
 #include <bob.h>
+#include <QSet>
 
 class MainWindow;
 
@@ -31,7 +32,8 @@ private:
     QGraphicsPixmapItem *fondo; // Imagen del fondo
     int velocidadFondo;         // Velocidad del fondo
     QTimer *timerFondo;
-    QTimer *timerAnimacionJugador;         // Temporizador para actualizar el fondo
+    QTimer *timerAnimacionJugador;
+    QSet<int> teclasPresionadas;        // Temporizador para actualizar el fondo
     std::array<QGraphicsRectItem*, 3> plataformas;
     bob *jugador; //mi puntero a mi personaje bob patiño
 };
