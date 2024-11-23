@@ -5,6 +5,8 @@
 #include <QTimer>
 #include <QKeyEvent>
 #include <QGraphicsPixmapItem>
+#include <QGraphicsRectItem>
+#include <bob.h>
 
 class MainWindow;
 
@@ -16,20 +18,22 @@ public:
     FirstScene(MainWindow *parent = nullptr);
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
+    ~FirstScene();
 
 private slots:
     void moverFondo();  // Función para manejar el movimiento del fondo
-
+    void establecerPlataformas();
 private:
     MainWindow *mainWindow;
     int vidas;
     int puntuacion;
     bool juegoPausado;
-
     QGraphicsPixmapItem *fondo; // Imagen del fondo
     int velocidadFondo;         // Velocidad del fondo
-
-    QTimer *timerFondo;         // Temporizador para actualizar el fondo
+    QTimer *timerFondo;
+    QTimer *timerAnimacionJugador;         // Temporizador para actualizar el fondo
+    std::array<QGraphicsRectItem*, 3> plataformas;
+    bob *jugador; //mi puntero a mi personaje bob patiño
 };
 
 #endif // FIRSTSCENE_H

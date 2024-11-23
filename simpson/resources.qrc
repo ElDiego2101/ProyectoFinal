@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>imagenes/back.png</file>
+        <file>imagenes/creditos.png</file>
+        <file>imagenes/FondoFs.png</file>
+        <file>imagenes/portada.png</file>
+        <file>imagenes/portada2.jpg</file>
+        <file>imagenes/start.png</file>
+        <file>imagenes/Tback.png</file>
+        <file>imagenes/TSimpsons.png</file>
+        <file>imagenes/Tstart.png</file>
+        <file>imagenes/spriteBob.png</file>
+    </qresource>
+</RCC>

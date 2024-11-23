@@ -9,12 +9,14 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    bob.cpp \
     firstscene.cpp \
     main.cpp \
     mainwindow.cpp \
     mscene.cpp
 
 HEADERS += \
+    bob.h \
     firstscene.h \
     mainwindow.h \
     mscene.h
@@ -28,4 +30,16 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 RESOURCES += \
-    res.qrc
+    resources.qrc
+
+DISTFILES += \
+    imagenes/FondoFS.jpg \
+    imagenes/FondoFs.png \
+    imagenes/TSimpsons.png \
+    imagenes/Tback.png \
+    imagenes/Tstart.png \
+    imagenes/back.png \
+    imagenes/creditos.png \
+    imagenes/portada.png \
+    imagenes/portada2.jpg \
+    imagenes/start.png
