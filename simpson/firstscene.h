@@ -17,9 +17,11 @@ class FirstScene : public QGraphicsScene
 
 public:
     FirstScene(MainWindow *parent = nullptr);
+    ~FirstScene();
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
-    ~FirstScene();
+    bool sobrePlataforma();
+    void aplicarGravedad();
 
 private slots:
     void moverFondo();  // Función para manejar el movimiento del fondo
@@ -33,9 +35,13 @@ private:
     int velocidadFondo;         // Velocidad del fondo
     QTimer *timerFondo;
     QTimer *timerAnimacionJugador;
+    QTimer *timerGravedad;
     QSet<int> teclasPresionadas;        // Temporizador para actualizar el fondo
     std::array<QGraphicsRectItem*, 3> plataformas;
     bob *jugador; //mi puntero a mi personaje bob patiño
+    bool enSalto;         // Indica si el jugador está actualmente saltando
+    int velocidadSalto;   // Velocidad inicial del salto
+    int gravedad;
 };
 
 #endif // FIRSTSCENE_H

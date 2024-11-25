@@ -2,8 +2,8 @@
 
 bob::bob(QGraphicsItem *parent)
     : QGraphicsPixmapItem(parent),
-    x(0), y(0), dx(5), dy(5),
-    frameHeight(150), frameWidth(200), // Ejemplo de tamaños de cuadro
+    x(0), y(600), dx(5), dy(5),
+    frameHeight(151), frameWidth(200), // Ejemplo de tamaños de cuadro
     currentFrame(0),
     currentDirection(ninguna),
     lastDirection(derecha) {
@@ -86,10 +86,6 @@ void bob::detenerJugador() {
 void bob::nextFrame() {
     if (currentDirection == ninguna)
         return;
-
-    // Calcular posición del cuadro en el spritesheet
-   // int frameX = currentFrame * frameWidth;
-    //int frameY = currentDirection * frameHeight;
 
     // Actualizar el cuadro visible
     dibujarJugador();

@@ -16,15 +16,24 @@ FirstScene::FirstScene(MainWindow *parent)
     timerFondo = new QTimer(this);
     connect(timerFondo, &QTimer::timeout, this, &FirstScene::moverFondo);
     timerFondo->start(30);  // Intervalo de actualización del movimiento
+
+    timerGravedad = new QTimer(this);
+    connect(timerGravedad, &QTimer::timeout, this, &FirstScene::aplicarGravedad);
+    timerGravedad->start(30);
+
+    // Cambia según la cantidad necesaria
     establecerPlataformas();
 
 
     //vamos a establecer los parametros del jugador
     jugador = new bob();
     addItem(jugador); // Agregar al jugador a la escena
-    jugador->setPos(0, 520);
+    jugador->setPos(0, 610);
 
-    //teAnimation
+    //salto
+    enSalto = false;
+    velocidadSalto = 15;
+    gravedad = 2;
 
 }
 
@@ -40,21 +49,42 @@ void FirstScene::keyPressEvent(QKeyEvent *event) {
         }
     } else if (event->key() == Qt::Key_D) {
         velocidadFondo = -velocidad;
+
     }
+    //camara del salto
+    if (event->key() == Qt::Key_W && !enSalto && sobrePlataforma()) {
+        enSalto = true;           // Activar el salto
+        velocidadSalto = -15;     // Velocidad inicial negativa (hacia arriba)
+    }
+
+    //vamos a guardar la pos anterior
+    int posX=jugador->getX();
+    int posY=jugador->getY();
 
     // Movimiento del jugador según tecla
     switch (event->key()) {
-    case Qt::Key_D:
+    case Qt::Key_D:{
         jugador->moverJugador(derecha);
         jugador->setX(jugador->getX() + 5);
+        if (!sobrePlataforma()) {
+            jugador->setX(posX); // Revertir movimiento
+            jugador->detenerJugador();
+            velocidadFondo=0;}
+
         break;
-    case Qt::Key_A:
+    }
+    case Qt::Key_A:{
         jugador->moverJugador(izquierda);
         jugador->setX(jugador->getX() - 5);
+        if (!sobrePlataforma()) {
+            jugador->setX(posX); // Revertir movimiento
+            jugador->detenerJugador();
+            velocidadFondo=0;}
         break;
+    }
     case Qt::Key_W:
         jugador->moverJugador(arriba);
-        jugador->setY(jugador->getY() - 5);
+        //jugador->setY(jugador->getY() - 5);
         break;
     case Qt::Key_S:
         jugador->moverJugador(abajo);
@@ -63,6 +93,13 @@ void FirstScene::keyPressEvent(QKeyEvent *event) {
     }
 
     jugador->setPos(jugador->getX(), jugador->getY());
+
+    // Validar si está sobre una plataforma
+    if (!sobrePlataforma()) {
+        jugador->setPos(posX, posY); // Revertir movimiento
+        jugador->detenerJugador();
+        return;
+    }
 }
 
 void FirstScene::keyReleaseEvent(QKeyEvent *event) {
@@ -75,7 +112,7 @@ void FirstScene::keyReleaseEvent(QKeyEvent *event) {
 
     if (!teclaActiva) {
         // Detener el jugador y la animación solo si no hay teclas activas
-        //jugador->detenerJugador();
+        jugador->detenerJugador();
         velocidadFondo = 0; // Detén el movimiento del fondo
     }
 }
@@ -109,6 +146,38 @@ void FirstScene::establecerPlataformas(){
 }
 
 FirstScene::~FirstScene() {
+    delete fondo;
+    delete jugador;
+    delete timerFondo;
+    delete timerGravedad;
+    for (auto plataforma : plataformas) {
+        delete plataforma;
+    }
 }
-
+bool FirstScene::sobrePlataforma() {
+    for (auto *plataforma : plataformas) {
+        if (jugador->collidesWithItem(plataforma)) {
+            return true;
+        }
+    }
+    return false;
+}
 //no olvidarme de borrar en la memoria dinamica
+
+void FirstScene::aplicarGravedad() {
+    // Si el jugador está en salto, actualiza la posición vertical
+    if (enSalto) {
+        jugador->setY(jugador->getY() + velocidadSalto); // Mover según la velocidad
+        velocidadSalto += gravedad;        // Aplicar gravedad
+        jugador->setPos(jugador->getX(), jugador->getY());
+        // Verificar si el jugador aterrizó en una plataforma
+        if (sobrePlataforma()) {
+          enSalto = false;              // Termina el salto
+            jugador->setY(jugador->getY());  // Ajusta la posición exacta
+            velocidadSalto = 0;           // Reinicia la velocidad
+        }
+    } else if (!sobrePlataforma()) {
+        // Aplicar gravedad si el jugador no está en una plataforma
+        jugador->setY(jugador->getY() + gravedad);
+    }
+}
