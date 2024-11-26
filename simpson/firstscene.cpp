@@ -38,7 +38,7 @@ FirstScene::FirstScene(MainWindow *parent)
 }
 bool FirstScene::puedeBajar() {
     QRectF rectPies = jugador->getPies()->sceneBoundingRect(); // Rectángulo global de los pies
-    qreal margenBusqueda = 20; // Rango adicional para buscar una plataforma debajo
+    qreal margenBusqueda = 5; // Rango adicional para buscar una plataforma debajo
 
     for (auto *plataforma : plataformas) {
         QRectF rectPlataforma = plataforma->sceneBoundingRect();
