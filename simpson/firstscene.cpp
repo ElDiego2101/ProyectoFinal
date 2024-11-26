@@ -32,7 +32,7 @@ FirstScene::FirstScene(MainWindow *parent)
 
     //salto
     enSalto = false;
-    velocidadSalto = 15;
+    velocidadSalto =0;
     gravedad = 2;
 
 }
@@ -54,7 +54,7 @@ void FirstScene::keyPressEvent(QKeyEvent *event) {
     //camara del salto
     if (event->key() == Qt::Key_W && !enSalto && sobrePlataforma()) {
         enSalto = true;           // Activar el salto
-        velocidadSalto = -15;     // Velocidad inicial negativa (hacia arriba)
+        velocidadSalto = -28;     // Velocidad inicial negativa (hacia arriba)
     }
 
     //vamos a guardar la pos anterior
@@ -84,7 +84,7 @@ void FirstScene::keyPressEvent(QKeyEvent *event) {
     }
     case Qt::Key_W:
         jugador->moverJugador(arriba);
-        //jugador->setY(jugador->getY() - 5);
+        //jugador->setY(jugador->getY() -10);
         break;
     case Qt::Key_S:
         jugador->moverJugador(abajo);
@@ -155,12 +155,12 @@ FirstScene::~FirstScene() {
     }
 }
 bool FirstScene::sobrePlataforma() {
-    for (auto *plataforma : plataformas) {
-        if (jugador->collidesWithItem(plataforma)) {
-            return true;
-        }
-    }
-    return false;
+  for (auto *plataforma : plataformas) {
+       if (jugador->getPies()->collidesWithItem(plataforma)) {
+  return true;
+     }
+  }
+   return false;
 }
 //no olvidarme de borrar en la memoria dinamica
 

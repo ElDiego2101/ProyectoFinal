@@ -1,4 +1,6 @@
 #include "bob.h"
+#include <QBrush>
+#include <QPen>
 
 bob::bob(QGraphicsItem *parent)
     : QGraphicsPixmapItem(parent),
@@ -15,6 +17,12 @@ bob::bob(QGraphicsItem *parent)
 
     timerAnimacion = new QTimer(this);
     connect(timerAnimacion, &QTimer::timeout, this, &bob::nextFrame);
+
+    //pies para colisiones
+    pies = new QGraphicsRectItem(this); // Hijo de `bob`
+    pies->setRect(0,frameHeight-16,frameWidth, 5); // Rectángulo en la parte inferior
+    pies->setPen(QPen(Qt::NoPen));         // QPen para "sin borde"
+    pies->setBrush(QBrush(Qt::red)); // QBrush para "transparente"
 }
 
 int bob::getX() const {
@@ -83,6 +91,11 @@ void bob::detenerJugador() {
     setPixmap(spriteSheet.copy(frameX, frameY, frameWidth, frameHeight));
 }
 
+QGraphicsRectItem *bob::getPies() const
+{
+    return pies;
+}
+
 void bob::nextFrame() {
     if (currentDirection == ninguna)
         return;
@@ -93,6 +106,7 @@ void bob::nextFrame() {
     // Avanzar al siguiente cuadro
     currentFrame = (currentFrame + 1) % 4; // Suponiendo 4 cuadros por animación
 }
+
 bob::~bob() {
     delete timerAnimacion;  // Limpieza del temporizador
 }

@@ -5,6 +5,7 @@
 #include <QTimer>
 #include <QObject>
 #include <QKeyEvent>
+#include <QRectF>
 
 enum  Direccion{
     ninguna,
@@ -26,6 +27,7 @@ private:
     int currentFrame;  // Cuadro actual de la animación
     Direccion currentDirection;  // Dirección actual
     Direccion lastDirection;  // Última dirección activa
+    QGraphicsRectItem *pies;
     QPixmap spriteSheet;  // Imagen completa de los cuadros
     QTimer *timerAnimacion;
 private slots:
@@ -40,6 +42,7 @@ public:
     void setX(int newX);
     int getY() const;
     void setY(int newY);
+    QGraphicsRectItem *getPies() const;
 };
 
 #endif // BOB_H
