@@ -19,7 +19,7 @@ FirstScene::FirstScene(MainWindow *parent)
 
     timerGravedad = new QTimer(this);
     connect(timerGravedad, &QTimer::timeout, this, &FirstScene::aplicarGravedad);
-    timerGravedad->start(25);
+    timerGravedad->start(30);
     golpeDaño=10;
 
     // Cambia según la cantidad necesaria
@@ -77,7 +77,7 @@ void FirstScene::keyPressEvent(QKeyEvent *event) {
 
     if (event->key() == Qt::Key_S && !enSalto && puedeBajar()) {
         enSalto = false;           // Activar el salto
-        velocidadSalto = +28;
+        velocidadSalto = +10;
         jugador->moverJugador(abajo);
     }
 
@@ -139,15 +139,15 @@ void FirstScene::keyReleaseEvent(QKeyEvent *event) {
     teclasPresionadas.remove(event->key()); // Eliminar la tecla liberada
 
     bool teclaActiva = teclasPresionadas.contains(Qt::Key_A) ||
-                       teclasPresionadas.contains(Qt::Key_D) ||
-                       teclasPresionadas.contains(Qt::Key_W) ||
-                       teclasPresionadas.contains(Qt::Key_S);
+                      teclasPresionadas.contains(Qt::Key_D) ||
+                      teclasPresionadas.contains(Qt::Key_W) ||
+                     teclasPresionadas.contains(Qt::Key_S);
 
     if (!teclaActiva) {
-        // Detener el jugador y la animación solo si no hay teclas activas
+       //Detener el jugador y la animación solo si no hay teclas activas
         jugador->detenerJugador();
         velocidadFondo = 0; // Detén el movimiento del fondo
-    }
+   }
 }
 
 void FirstScene::moverFondo() {
@@ -221,7 +221,7 @@ void FirstScene::aplicarGravedad() {
         }
 
     }
-    else if (!sobrePlataforma() && puedeBajar()) {
+    else if (!sobrePlataforma()) {
         // Aplicar gravedad si el jugador no está en una plataforma
         jugador->setY(jugador->getY() + gravedad);
     }
