@@ -22,6 +22,7 @@ public:
     void keyReleaseEvent(QKeyEvent *event) override;
     bool sobrePlataforma();
     void aplicarGravedad();
+    bool puedeBajar();
 
 private slots:
     void moverFondo();  // Función para manejar el movimiento del fondo
