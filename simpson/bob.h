@@ -12,7 +12,8 @@ enum  Direccion{
     arriba,
     abajo,
     izquierda,
-    derecha
+    derecha,
+    golpe
 };
 class bob:public QObject,public QGraphicsPixmapItem
 {

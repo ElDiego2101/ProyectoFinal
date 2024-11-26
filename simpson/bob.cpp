@@ -20,7 +20,7 @@ bob::bob(QGraphicsItem *parent)
 
     //pies para colisiones
     pies = new QGraphicsRectItem(this); // Hijo de `bob`
-    pies->setRect(0,frameHeight-16,frameWidth, 5); // Rectángulo en la parte inferior
+    pies->setRect(0,frameHeight-2,frameWidth, 2); // Rectángulo en la parte inferior
     pies->setPen(QPen(Qt::NoPen));         // QPen para "sin borde"
     pies->setBrush(QBrush(Qt::red)); // QBrush para "transparente"
 }
@@ -62,6 +62,15 @@ void bob::dibujarJugador() {
             frameX = 0; // Primer cuadro
         }
         break;
+    case golpe:
+        frameY=4*frameHeight;
+        if(lastDirection==derecha){
+            frameX=frameWidth;
+        }else if(lastDirection==izquierda){
+            frameX=0;
+
+        }
+        break;
     case arriba:
     case abajo:
         frameY = 3 * frameHeight; // Cuarta fila
@@ -99,7 +108,11 @@ QGraphicsRectItem *bob::getPies() const
 void bob::nextFrame() {
     if (currentDirection == ninguna)
         return;
-
+    if (currentDirection==golpe){
+        currentFrame=(currentFrame+1)%2;
+        dibujarJugador();
+        return;
+    }
     // Actualizar el cuadro visible
     dibujarJugador();
 

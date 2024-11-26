@@ -19,7 +19,8 @@ FirstScene::FirstScene(MainWindow *parent)
 
     timerGravedad = new QTimer(this);
     connect(timerGravedad, &QTimer::timeout, this, &FirstScene::aplicarGravedad);
-    timerGravedad->start(30);
+    timerGravedad->start(25);
+    golpeDaño=10;
 
     // Cambia según la cantidad necesaria
     establecerPlataformas();
@@ -38,7 +39,7 @@ FirstScene::FirstScene(MainWindow *parent)
 }
 bool FirstScene::puedeBajar() {
     QRectF rectPies = jugador->getPies()->sceneBoundingRect(); // Rectángulo global de los pies
-    qreal margenBusqueda = 5; // Rango adicional para buscar una plataforma debajo
+    qreal margenBusqueda = 1; // Rango adicional para buscar una plataforma debajo
 
     for (auto *plataforma : plataformas) {
         QRectF rectPlataforma = plataforma->sceneBoundingRect();
@@ -69,7 +70,7 @@ void FirstScene::keyPressEvent(QKeyEvent *event) {
 
     }
     //camara del salto
-    if (event->key() == Qt::Key_W && !enSalto && sobrePlataforma()) {
+    if (event->key() == Qt::Key_W && !enSalto) {
         enSalto = true;           // Activar el salto
         velocidadSalto = -28;     // Velocidad inicial negativa (hacia arriba)
     }
@@ -118,6 +119,9 @@ void FirstScene::keyPressEvent(QKeyEvent *event) {
         //jugador->moverJugador(abajo);
         //jugador->setY(jugador->getY() + 5);
         break;
+    }
+    case Qt::Key_Z:{
+        jugador->moverJugador(golpe);
     }
     }
 
@@ -217,7 +221,7 @@ void FirstScene::aplicarGravedad() {
         }
 
     }
-    else if (!sobrePlataforma() &&puedeBajar()) {
+    else if (!sobrePlataforma() && puedeBajar()) {
         // Aplicar gravedad si el jugador no está en una plataforma
         jugador->setY(jugador->getY() + gravedad);
     }
