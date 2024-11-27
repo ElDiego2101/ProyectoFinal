@@ -37,6 +37,7 @@ private:
     QTimer *timerFondo;
     QTimer *timerAnimacionJugador;
     QTimer *timerGravedad;
+    QTimer* simuladorTecla;
     QSet<int> teclasPresionadas;        // Temporizador para actualizar el fondo
     std::array<QGraphicsRectItem*, 3> plataformas;
     bob *jugador; //mi puntero a mi personaje bob patiño

@@ -19,7 +19,7 @@ FirstScene::FirstScene(MainWindow *parent)
 
     timerGravedad = new QTimer(this);
     connect(timerGravedad, &QTimer::timeout, this, &FirstScene::aplicarGravedad);
-    timerGravedad->start(15);
+    timerGravedad->start(30);
     golpeDaño=10;
 
     // Cambia según la cantidad necesaria
@@ -36,6 +36,7 @@ FirstScene::FirstScene(MainWindow *parent)
     enBajo=false;
     velocidadSalto =0;
     gravedad = 2;
+
 
 }
 bool FirstScene::puedeBajar() {
@@ -72,14 +73,15 @@ void FirstScene::keyPressEvent(QKeyEvent *event) {
     }
     //camara del salto
     if (event->key() == Qt::Key_W && !enSalto) {
+        jugador->moverJugador(arriba);
         enSalto = true;           // Activar el salto
         velocidadSalto = -28;     // Velocidad inicial negativa (hacia arriba)
     }
 
     if (event->key() == Qt::Key_S && !enSalto && puedeBajar()) {
+        jugador->moverJugador(abajo);
         enBajo = true;           // Activar el salto
         velocidadSalto = +10;
-        jugador->moverJugador(abajo);
     }
 
     //vamos a guardar la pos anterior
@@ -112,11 +114,11 @@ void FirstScene::keyPressEvent(QKeyEvent *event) {
         //jugador->setY(jugador->getY() -10);
         break;
     case Qt::Key_S:{
-        if (!enSalto && puedeBajar()) { // Solo puede bajar si no está saltando y hay espacio abajo
+         // Solo puede bajar si no está saltando y hay espacio abajo
             //jugador->setY(jugador->getY() + 5); // Baja una pequeña distancia
             jugador->moverJugador(abajo);
             //jugador->setPos(jugador->getX(), jugador->getY());
-        }
+
         //jugador->moverJugador(abajo);
         //jugador->setY(jugador->getY() + 5);
         break;
@@ -139,16 +141,18 @@ void FirstScene::keyPressEvent(QKeyEvent *event) {
 void FirstScene::keyReleaseEvent(QKeyEvent *event) {
     teclasPresionadas.remove(event->key()); // Eliminar la tecla liberada
 
-    bool teclaActiva = teclasPresionadas.contains(Qt::Key_A) ||
-                      teclasPresionadas.contains(Qt::Key_D) ||
-                      teclasPresionadas.contains(Qt::Key_W) ||
-                     teclasPresionadas.contains(Qt::Key_S);
+    // Verificar si quedan teclas activas que controlen movimiento
+    bool hayTeclasActivas = teclasPresionadas.contains(Qt::Key_A) ||
+                            teclasPresionadas.contains(Qt::Key_D) ||
+                            teclasPresionadas.contains(Qt::Key_W) ||
+                            teclasPresionadas.contains(Qt::Key_S);
 
-    if (!teclaActiva) {
-       //Detener el jugador y la animación solo si no hay teclas activas
+    if (!hayTeclasActivas) {
+        // Detener jugador y animación si no hay teclas relevantes activas
         jugador->detenerJugador();
-        velocidadFondo = 0; // Detén el movimiento del fondo
-   }
+         // Detén la animación
+        velocidadFondo = 0; // Detener el movimiento del fondo
+    }
 }
 
 void FirstScene::moverFondo() {
@@ -168,7 +172,7 @@ void FirstScene::moverFondo() {
 void FirstScene::establecerPlataformas(){
     int posicion=0;
     for (int i = 0; i < plataformas.size(); ++i) {
-        QGraphicsRectItem *plataforma = new QGraphicsRectItem( 0,390+posicion, 2292, 10);
+        QGraphicsRectItem *plataforma = new QGraphicsRectItem(0,390+posicion, 1500, 10);
         plataforma->setBrush(Qt::darkGray);
         addItem(plataforma);
         plataformas[i] = plataforma; // Asigna la plataforma en el índice i

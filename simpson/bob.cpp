@@ -43,7 +43,6 @@ void bob::setY(int newY) {
 
 void bob::dibujarJugador() {
     int frameX = currentFrame * frameWidth; // Columna actual
-
     // Fila depende de la dirección actual
     int frameY = 0;
     switch (currentDirection) {
@@ -86,7 +85,11 @@ void bob::moverJugador(Direccion direccion) {
         currentDirection = direccion;
         lastDirection = (direccion == derecha || direccion == izquierda) ? direccion : lastDirection;
         currentFrame = 0;           // Reinicia la animación
-        timerAnimacion->start(200); // Inicia temporizador (100 ms por cuadro)
+         // Inicia temporizador (100 ms por cuadro)
+        timerAnimacion->start(100);
+    }
+    if (!timerAnimacion->isActive()) {
+        timerAnimacion->start(100); // Inicia la animación si no está activa
     }
 }
 
@@ -107,19 +110,19 @@ QGraphicsRectItem *bob::getPies() const
 
 void bob::nextFrame() {
     if (currentDirection == ninguna)
-        return;
+       return;
     if (currentDirection==golpe){
         currentFrame=(currentFrame+1)%2;
         dibujarJugador();
         return;
     }
-    // Actualizar el cuadro visible
     dibujarJugador();
-
-    // Avanzar al siguiente cuadro
-    currentFrame = (currentFrame + 1) % 4; // Suponiendo 4 cuadros por animación
+    if (currentFrame >= 4) {
+        currentFrame = 0;
+    }
+        currentFrame = (currentFrame + 1)%4;
 }
 
 bob::~bob() {
-    delete timerAnimacion;  // Limpieza del temporizador
+    delete timerAnimacion;
 }
