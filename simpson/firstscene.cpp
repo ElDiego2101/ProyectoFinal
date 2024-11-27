@@ -19,7 +19,7 @@ FirstScene::FirstScene(MainWindow *parent)
 
     timerGravedad = new QTimer(this);
     connect(timerGravedad, &QTimer::timeout, this, &FirstScene::aplicarGravedad);
-    timerGravedad->start(30);
+    timerGravedad->start(15);
     golpeDaño=10;
 
     // Cambia según la cantidad necesaria
@@ -29,17 +29,18 @@ FirstScene::FirstScene(MainWindow *parent)
     //vamos a establecer los parametros del jugador
     jugador = new bob();
     addItem(jugador); // Agregar al jugador a la escena
-    jugador->setPos(0, 610);
+    jugador->setPos(0, 600);
 
     //salto
     enSalto = false;
+    enBajo=false;
     velocidadSalto =0;
     gravedad = 2;
 
 }
 bool FirstScene::puedeBajar() {
     QRectF rectPies = jugador->getPies()->sceneBoundingRect(); // Rectángulo global de los pies
-    qreal margenBusqueda = 1; // Rango adicional para buscar una plataforma debajo
+    qreal margenBusqueda = 15; // Rango adicional para buscar una plataforma debajo
 
     for (auto *plataforma : plataformas) {
         QRectF rectPlataforma = plataforma->sceneBoundingRect();
@@ -76,7 +77,7 @@ void FirstScene::keyPressEvent(QKeyEvent *event) {
     }
 
     if (event->key() == Qt::Key_S && !enSalto && puedeBajar()) {
-        enSalto = false;           // Activar el salto
+        enBajo = true;           // Activar el salto
         velocidadSalto = +10;
         jugador->moverJugador(abajo);
     }
@@ -189,11 +190,12 @@ FirstScene::~FirstScene() {
 }
 bool FirstScene::sobrePlataforma() {
   for (auto *plataforma : plataformas) {
-       if (jugador->getPies()->collidesWithItem(plataforma)) {
+    if (jugador->getPies()->collidesWithItem(plataforma)) {
   return true;
-     }
+   }
   }
-   return false;
+  return false;
+
 }
 //no olvidarme de borrar en la memoria dinamica
 
@@ -206,17 +208,19 @@ void FirstScene::aplicarGravedad() {
         // Verificar si el jugador aterrizó en una plataforma
         if (sobrePlataforma()) {
           enSalto = false;              // Termina el salto
-            jugador->setY(jugador->getY());  // Ajusta la posición exacta
+          jugador->setY(jugador->getY());
+          jugador->setPos(jugador->getX(), jugador->getY());// Ajusta la posición exacta
             velocidadSalto = 0;           // Reinicia la velocidad
         }
-    }else if(!enSalto && puedeBajar()){
+    }else if(enBajo && puedeBajar()){
         jugador->setY(jugador->getY() + velocidadSalto); // Mover según la velocidad
         velocidadSalto += gravedad;        // Aplicar gravedad
         jugador->setPos(jugador->getX(), jugador->getY());
         // Verificar si el jugador aterrizó en una plataforma
         if (sobrePlataforma()) {
-            enSalto = false;              // Termina el salto
-            jugador->setY(jugador->getY());  // Ajusta la posición exacta
+            enBajo = false;              // Termina el salto
+            jugador->setY(jugador->getY());
+            jugador->setPos(jugador->getX(), jugador->getY());    // Ajusta la posición exacta
             velocidadSalto = 0;           // Reinicia la velocidad
         }
 
@@ -224,5 +228,11 @@ void FirstScene::aplicarGravedad() {
     else if (!sobrePlataforma()) {
         // Aplicar gravedad si el jugador no está en una plataforma
         jugador->setY(jugador->getY() + gravedad);
+        jugador->setPos(jugador->getX(), jugador->getY());
+        if (jugador->getY() > 600) {
+            jugador->setY(600 - jugador->boundingRect().height());
+            enSalto = false;
+            velocidadSalto = 0;
+        }
     }
 }

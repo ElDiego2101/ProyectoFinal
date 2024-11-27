@@ -41,6 +41,7 @@ private:
     std::array<QGraphicsRectItem*, 3> plataformas;
     bob *jugador; //mi puntero a mi personaje bob patiño
     bool enSalto; // Indica si el jugador está actualmente saltando
+    bool enBajo;
     short golpeDaño;
     int velocidadSalto;   // Velocidad inicial del salto
     int gravedad;

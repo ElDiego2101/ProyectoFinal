@@ -20,7 +20,7 @@ bob::bob(QGraphicsItem *parent)
 
     //pies para colisiones
     pies = new QGraphicsRectItem(this); // Hijo de `bob`
-    pies->setRect(0,frameHeight-2,frameWidth, 2); // Rectángulo en la parte inferior
+    pies->setRect(0,frameHeight-8,frameWidth, 2); // Rectángulo en la parte inferior
     pies->setPen(QPen(Qt::NoPen));         // QPen para "sin borde"
     pies->setBrush(QBrush(Qt::red)); // QBrush para "transparente"
 }
