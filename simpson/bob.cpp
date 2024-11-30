@@ -3,12 +3,17 @@
 #include <QPen>
 
 bob::bob(QGraphicsItem *parent)
-    : QGraphicsPixmapItem(parent),
-    x(0), y(600), dx(5), dy(5),
-    frameHeight(151), frameWidth(200), // Ejemplo de tamaños de cuadro
-    currentFrame(0),
-    currentDirection(ninguna),
-    lastDirection(derecha) {
+    : personaje(parent) {
+    //inicializo
+    x = 0;
+    y = 600;
+    dx = 5;
+    dy = 5;
+    frameHeight = 151;
+    frameWidth = 200;
+    currentFrame = 0;
+    currentDirection = ninguna;
+    lastDirection = derecha;
     // Cargar el spritesheet
     spriteSheet = QPixmap(":/imagenes/spriteBob.png");
 
@@ -26,21 +31,6 @@ bob::bob(QGraphicsItem *parent)
 
 }
 
-int bob::getX() const {
-    return x;
-}
-
-void bob::setX(int newX) {
-    x = newX;
-}
-
-int bob::getY() const {
-    return y;
-}
-
-void bob::setY(int newY) {
-    y = newY;
-}
 
 void bob::dibujarJugador() {
     int frameX = currentFrame * frameWidth; // Columna actual
@@ -102,16 +92,6 @@ void bob::detenerJugador() {
     int frameX = (lastDirection == izquierda) ? frameWidth : 0; // Izquierda o derecha
     int frameY = 2 * frameHeight; // Fila estática (ninguna)
     setPixmap(spriteSheet.copy(frameX, frameY, frameWidth, frameHeight));
-}
-
-QGraphicsRectItem *bob::getPies() const
-{
-    return pies;
-}
-
-Direccion bob::getCurrentDirection() const
-{
-    return currentDirection;
 }
 
 void bob::nextFrame() {

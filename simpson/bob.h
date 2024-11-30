@@ -1,36 +1,18 @@
 #ifndef BOB_H
 #define BOB_H
-#include <QGraphicsPixmapItem>
-#include <Qpixmap>
-#include <QTimer>
-#include <QObject>
-#include <QKeyEvent>
-#include <QRectF>
+#include "personaje.h"
 
-enum  Direccion{
-    ninguna,
-    arriba,
-    abajo,
-    izquierda,
-    derecha,
-    golpe
-};
-class bob:public QObject,public QGraphicsPixmapItem
+//enum  Direccion{
+ //   ninguna,
+  //  arriba,
+  //  abajo,
+   // izquierda,
+    //derecha,
+    //golpe
+//};
+class bob:public personaje
 {
-    Q_OBJECT  // Esta línea es importante
-private:
-    int x;
-    int y;
-    int dx;
-    int dy;
-    int frameHeight;
-    int frameWidth;
-    int currentFrame;  // Cuadro actual de la animación
-    Direccion currentDirection;  // Dirección actual
-    Direccion lastDirection;  // Última dirección activa
-    QGraphicsRectItem *pies;
-    QPixmap spriteSheet;  // Imagen completa de los cuadros
-    QTimer *timerAnimacion;
+    Q_OBJECT
 private slots:
     void nextFrame();    // Detiene la animación
 public:
@@ -39,12 +21,12 @@ public:
     void dibujarJugador();  // Dibuja el personaje en su frame actual
     void moverJugador(Direccion direccion);  // Mueve al jugador
     void detenerJugador();
-    int getX() const;
-    void setX(int newX);
-    int getY() const;
-    void setY(int newY);
-    QGraphicsRectItem *getPies() const;
-    Direccion getCurrentDirection() const;
+   // int getX() const;
+   // void setX(int newX);
+    //int getY() const;
+   // void setY(int newY);
+    //QGraphicsRectItem *getPies() const;
+    //Direccion getCurrentDirection() const;
 };
 
 #endif // BOB_H

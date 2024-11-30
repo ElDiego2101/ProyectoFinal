@@ -14,14 +14,16 @@ SOURCES += \
     firstscene.cpp \
     main.cpp \
     mainwindow.cpp \
-    mscene.cpp
+    mscene.cpp \
+    personaje.cpp
 
 HEADERS += \
     bob.h \
     enemigol1.h \
     firstscene.h \
     mainwindow.h \
-    mscene.h
+    mscene.h \
+    personaje.h
 
 FORMS += \
     mainwindow.ui
