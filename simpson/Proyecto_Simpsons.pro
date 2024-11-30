@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     bob.cpp \
+    enemigol1.cpp \
     firstscene.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -17,6 +18,7 @@ SOURCES += \
 
 HEADERS += \
     bob.h \
+    enemigol1.h \
     firstscene.h \
     mainwindow.h \
     mscene.h

@@ -30,6 +30,7 @@ FirstScene::FirstScene(MainWindow *parent)
     //vamos a establecer los parametros del jugador
     jugador = new bob();
     addItem(jugador); // Agregar al jugador a la escena
+    jugador->setZValue(0);
     jugador->setPos(0, 600);
 
     //salto
@@ -39,10 +40,14 @@ FirstScene::FirstScene(MainWindow *parent)
     gravedad = 2;
     veri=true;
 
+    //colisiones con cajas
+    colisionDerecha=false;
+    colisionIzquierda=false;
+
     //puntero de cajas
-    for (int i = 0; i < Ncajas; ++i) {
-        cajas[i] = nullptr;
-    }
+   // for (int i = 0; i < Ncajas; ++i) {
+   //    cajas[i] = nullptr;
+    //}
 
 }
 bool FirstScene::puedeBajar() {
@@ -127,11 +132,15 @@ void FirstScene::keyPressEvent(QKeyEvent *event) {
     if (event->key() == Qt::Key_W && !enSalto) {
         jugador->moverJugador(arriba);
         enSalto = true;           // Activar el salto
-        velocidadSalto = -28;     // Velocidad inicial negativa (hacia arriba)
+        velocidadSalto = -28;     // Velocidad inicial negativa (hacia arriba
+        colisionDerecha=false;
+        colisionIzquierda=false;
     }
 
     if (event->key() == Qt::Key_S && !enSalto && puedeBajar()) {
         jugador->moverJugador(abajo);
+        colisionDerecha=false;
+        colisionIzquierda=false;
         enBajo = true;           // Activar el salto
         velocidadSalto = +10;
     }
@@ -141,24 +150,73 @@ void FirstScene::keyPressEvent(QKeyEvent *event) {
     // Movimiento del jugador según tecla
     switch (event->key()) {
     case Qt::Key_D:{
-        jugador->moverJugador(derecha);
-        jugador->setX(jugador->getX() + 6);
-        veri=false;
-        if (!sobrePlataforma()) {
-            jugador->setX(posX); // Revertir movimiento
-            jugador->detenerJugador();
-            velocidadFondo=0;}
+        if (!colisionDerecha) { // Si no hay colisión hacia la derecha
+            jugador->moverJugador(derecha);
+            jugador->setX(jugador->getX() + 6);
+            veri = false;
+            if (!sobrePlataforma()) { // Detectar colisión
+                jugador->setX(posX); // Revertir movimiento
+                jugador->detenerJugador();
+                velocidadFondo = 0;
+            }
+            if(!colisionIzquierda){
+                if(colisionCaja()){
+                    jugador->setX(posX); // Revertir movimiento
+                    jugador->detenerJugador();
+                    velocidadFondo = 0;
+                    colisionDerecha = true; // Activar bandera para bloquear movimiento a la derecha
+                }else{
+                    if(!colisionCaja()){
+                        colisionIzquierda=false;
+                    }
+                }
+        }else{
+                if(!colisionCaja()){
+                    colisionIzquierda=false;
+
+                }
+            }
+
+        //jugador->moverJugador(derecha);
+        //jugador->setX(jugador->getX() + 6);
+        //veri=false;
+        //if(!c2){
+           // if (!sobrePlataforma() || colisionCaja()) {
+             //   jugador->setX(posX); // Revertir movimiento
+              //  jugador->detenerJugador();
+                //velocidadFondo=0;
+               // c1=true;
+        }
 
         break;
     }
     case Qt::Key_A:{
-        jugador->moverJugador(izquierda);
-        jugador->setX(jugador->getX() - 6);
-        veri=false;
-        if (!sobrePlataforma()) {
-            jugador->setX(posX); // Revertir movimiento
-            jugador->detenerJugador();
-            //velocidadFondo=0;}
+        if (!colisionIzquierda) { // Si no hay colisión hacia la izquierda
+            jugador->moverJugador(izquierda);
+            jugador->setX(jugador->getX() - 6);
+            veri = false;
+            if (!sobrePlataforma()) { // Detectar colisión
+                jugador->setX(posX); // Revertir movimiento
+                jugador->detenerJugador();
+                velocidadFondo = 0;
+            }
+            if(!colisionDerecha){
+                if(colisionCaja()){
+                    jugador->setX(posX); // Revertir movimiento
+                    jugador->detenerJugador();
+                    velocidadFondo = 0;
+                    colisionIzquierda = true; // Activar bandera para bloquear movimiento a la derecha
+                }else{
+                    if(!colisionCaja()){
+                        colisionDerecha=false;
+                    }
+                }
+            }else{
+                if(!colisionCaja()){
+                    colisionDerecha=false;
+
+                }
+            }
         }
         break;
     }
@@ -189,6 +247,7 @@ void FirstScene::keyPressEvent(QKeyEvent *event) {
     jugador->setPos(jugador->getX(), jugador->getY());
 
     // Validar si está sobre una plataforma
+
 }
 
 void FirstScene::keyReleaseEvent(QKeyEvent *event) {
@@ -198,16 +257,15 @@ void FirstScene::keyReleaseEvent(QKeyEvent *event) {
     // Verificar qué tecla fue soltada y detener al jugador
     if (event->key() == Qt::Key_A || event->key() == Qt::Key_D) {
         velocidadFondo = 0; // Detener el fondo
-        jugador->detenerJugador(); // Detener el movimiento del jugador
+        jugador->detenerJugador();     // Detener el movimiento del jugador
     }
     else if (event->key() == Qt::Key_W) {
         //enSalto = false; // Permitir saltar nuevamente después de liberar la tecla
     }
     else if (event->key() == Qt::Key_S) {
-       // enBajo = false; // Detener el movimiento hacia abajo
+        // enBajo = false; // Detener el movimiento hacia abajo
     }
 }
-
 void FirstScene::establecerPlataformas(){
     int posicion=0;
     for (int i = 0; i < plataformas.size(); ++i) {
@@ -234,6 +292,7 @@ void FirstScene::establecerCajas(){
             QGraphicsPixmapItem *caja = new QGraphicsPixmapItem(QPixmap(":/imagenes/caja.jpg"));
 
             addItem(caja);
+            caja->setZValue(0);
             caja->setPos(posicionX, posicionY);
             cajas[indiceCaja] = caja;
             ++indiceCaja;
@@ -261,6 +320,7 @@ void FirstScene::establecerCajas(){
 
     }
 
+    qDebug() << indiceCaja;
 }
 
 FirstScene::~FirstScene() {
@@ -272,9 +332,8 @@ FirstScene::~FirstScene() {
     for (auto plataforma : plataformas) {
         delete plataforma;
     }
-    for (int i = 0; i < Ncajas; ++i) {
-        delete cajas[i];
-        cajas[i] = nullptr;
+    for (auto caja :cajas) {
+        delete caja;
     }
 }
 bool FirstScene::sobrePlataforma() {
@@ -285,6 +344,17 @@ bool FirstScene::sobrePlataforma() {
   }
   return false;
 
+}
+bool FirstScene::colisionCaja(){
+for (auto *caja:cajas) {
+    if (jugador->collidesWithItem(caja)) {
+        qDebug() << "colision detectada";
+        return true; // Si hay colisión con alguna caja
+    }
+}
+//colisionDerecha=false;
+//colisionIzquierda=false;
+return false; // No hay colisión con ninguna caja
 }
 //no olvidarme de borrar en la memoria dinamica
 

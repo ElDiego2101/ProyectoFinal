@@ -22,6 +22,7 @@ public:
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
     bool sobrePlataforma();
+    bool colisionCaja();
     void aplicarGravedad();
     bool puedeBajar();
     void establecerPlataformas();
@@ -39,6 +40,8 @@ private:
     QRectF rectVista;
     int limiteIzquierda;
     int limiteDerecha;
+    bool colisionDerecha;
+    bool colisionIzquierda;
     bool veri;
     QGraphicsPixmapItem *fondo; // Imagen del fondo
     int velocidadFondo;         // Velocidad del fondo
@@ -47,7 +50,7 @@ private:
     QTimer *timerGravedad;
     QTimer* simuladorTecla;
     QSet<int> teclasPresionadas;
-    QGraphicsPixmapItem* cajas[Ncajas];        // Temporizador para actualizar el fondo
+    std::array<QGraphicsPixmapItem*,27> cajas;       // Temporizador para actualizar el fondo
     std::array<QGraphicsRectItem*, 3> plataformas;
     bob *jugador; //mi puntero a mi personaje bob patiño
     bool enSalto; // Indica si el jugador está actualmente saltando
