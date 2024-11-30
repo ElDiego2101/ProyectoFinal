@@ -8,6 +8,7 @@
 #include <QGraphicsRectItem>
 #include <bob.h>
 #include <QSet>
+#define  Ncajas 27
 
 class MainWindow;
 
@@ -23,22 +24,30 @@ public:
     bool sobrePlataforma();
     void aplicarGravedad();
     bool puedeBajar();
+    void establecerPlataformas();
+    void establecerCajas();
 
 private slots:
     void moverFondo();  // Función para manejar el movimiento del fondo
-    void establecerPlataformas();
+
 private:
     MainWindow *mainWindow;
     int vidas;
     int puntuacion;
     bool juegoPausado;
+    QGraphicsView* vista;
+    QRectF rectVista;
+    int limiteIzquierda;
+    int limiteDerecha;
+    bool veri;
     QGraphicsPixmapItem *fondo; // Imagen del fondo
     int velocidadFondo;         // Velocidad del fondo
     QTimer *timerFondo;
     QTimer *timerAnimacionJugador;
     QTimer *timerGravedad;
     QTimer* simuladorTecla;
-    QSet<int> teclasPresionadas;        // Temporizador para actualizar el fondo
+    QSet<int> teclasPresionadas;
+    QGraphicsPixmapItem* cajas[Ncajas];        // Temporizador para actualizar el fondo
     std::array<QGraphicsRectItem*, 3> plataformas;
     bob *jugador; //mi puntero a mi personaje bob patiño
     bool enSalto; // Indica si el jugador está actualmente saltando

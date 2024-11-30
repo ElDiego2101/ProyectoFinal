@@ -10,5 +10,8 @@
         <file>imagenes/TSimpsons.png</file>
         <file>imagenes/Tstart.png</file>
         <file>imagenes/spriteBob.png</file>
+        <file>imagenes/bolaPelo.png</file>
+        <file>imagenes/caja.jpg</file>
+        <file>imagenes/enemigoS.png</file>
     </qresource>
 </RCC>

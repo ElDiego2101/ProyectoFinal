@@ -23,6 +23,7 @@ bob::bob(QGraphicsItem *parent)
     pies->setRect(0,frameHeight-8,frameWidth, 2); // Rectángulo en la parte inferior
     pies->setPen(QPen(Qt::NoPen));         // QPen para "sin borde"
     pies->setBrush(QBrush(Qt::red)); // QBrush para "transparente"
+
 }
 
 int bob::getX() const {
@@ -106,6 +107,11 @@ void bob::detenerJugador() {
 QGraphicsRectItem *bob::getPies() const
 {
     return pies;
+}
+
+Direccion bob::getCurrentDirection() const
+{
+    return currentDirection;
 }
 
 void bob::nextFrame() {

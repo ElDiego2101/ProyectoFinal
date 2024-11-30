@@ -23,6 +23,7 @@ FirstScene::FirstScene(MainWindow *parent)
     golpeDaño=10;
 
     // Cambia según la cantidad necesaria
+    establecerCajas();
     establecerPlataformas();
 
 
@@ -36,7 +37,12 @@ FirstScene::FirstScene(MainWindow *parent)
     enBajo=false;
     velocidadSalto =0;
     gravedad = 2;
+    veri=true;
 
+    //puntero de cajas
+    for (int i = 0; i < Ncajas; ++i) {
+        cajas[i] = nullptr;
+    }
 
 }
 bool FirstScene::puedeBajar() {
@@ -55,21 +61,67 @@ bool FirstScene::puedeBajar() {
 
     return false; // No
 }
+void FirstScene::moverFondo() {
+    if (velocidadFondo == 0) return; // No mover si no hay velocidad
 
+    // Almacena las vistas en una variable
+    auto vistas = this->views();
+    if (vistas.isEmpty()) return; // Verifica que haya al menos una vista
+
+    // Usa la primera vista sin generar objetos temporales
+    QGraphicsView *vista = vistas.first();
+    if (!vista) return;
+
+    // Obtener el rectángulo de la vista (limites de la cámara)
+    rectVista = vista->sceneRect();
+    limiteIzquierda = rectVista.left()-10;
+    limiteDerecha = rectVista.right()+10;
+
+    // Verificar si el jugador está cerca del borde izquierdo o derecho
+
+    if (jugador->getX() <= limiteIzquierda) {
+        // Si el jugador está a la izquierda de la vista, detener el fondo
+        velocidadFondo = -10;
+    } else if (jugador->getX() >= limiteDerecha) {
+        // Si el jugador está a la derecha de la vista, detener el fondo
+        velocidadFondo = +10;
+    }
+
+    // Desplaza la vista (en lugar del fondo)
+    QPointF nuevaPosicion = vista->sceneRect().topLeft() + QPointF(velocidadFondo, 0);
+
+    // Limitar el desplazamiento en X
+    if (nuevaPosicion.x() > 2168) {
+        nuevaPosicion.setX(2168); // Limitar el movimiento hacia la derecha
+    } else if (nuevaPosicion.x() < 0) {
+        nuevaPosicion.setX(0); // Limitar el movimiento hacia la izquierda
+    }
+
+    // Aplica la nueva posición a la vista
+    vista->setSceneRect(QRectF(nuevaPosicion, vista->sceneRect().size()));
+}
 
 void FirstScene::keyPressEvent(QKeyEvent *event) {
     teclasPresionadas.insert(event->key()); // Registrar la tecla
+    int velocidad = 4; // Velocidad del desplazamiento
+    int velocidadp = -4; // Velocidad negativa para mover a la izquierda
+    int posX=jugador->getX();
+    int posY=jugador->getY();
 
-    int velocidad = 5; // Velocidad del desplazamiento
-
-    if (event->key() == Qt::Key_A) {
-        velocidadFondo = velocidad;
-        if ((fondo->x()) > 0) {
-            velocidadFondo = 0;
+    if (event->key() == Qt::Key_A) { // Mover a la izquierda
+        if(veri){
+            velocidadFondo=0;
+        }else{
+            velocidadFondo = velocidadp;
         }
+        // Cambiar la dirección
+        // No es necesario verificar fondo->x(), ya que el movimiento se controla con la cámara
     } else if (event->key() == Qt::Key_D) {
-        velocidadFondo = -velocidad;
-
+        if(veri){
+            velocidadFondo=0;
+        }else{
+            velocidadFondo = velocidad;
+        }// Mover a la derecha
     }
     //camara del salto
     if (event->key() == Qt::Key_W && !enSalto) {
@@ -85,14 +137,13 @@ void FirstScene::keyPressEvent(QKeyEvent *event) {
     }
 
     //vamos a guardar la pos anterior
-    int posX=jugador->getX();
-    int posY=jugador->getY();
 
     // Movimiento del jugador según tecla
     switch (event->key()) {
     case Qt::Key_D:{
         jugador->moverJugador(derecha);
-        jugador->setX(jugador->getX() + 5);
+        jugador->setX(jugador->getX() + 6);
+        veri=false;
         if (!sobrePlataforma()) {
             jugador->setX(posX); // Revertir movimiento
             jugador->detenerJugador();
@@ -102,11 +153,13 @@ void FirstScene::keyPressEvent(QKeyEvent *event) {
     }
     case Qt::Key_A:{
         jugador->moverJugador(izquierda);
-        jugador->setX(jugador->getX() - 5);
+        jugador->setX(jugador->getX() - 6);
+        veri=false;
         if (!sobrePlataforma()) {
             jugador->setX(posX); // Revertir movimiento
             jugador->detenerJugador();
-            velocidadFondo=0;}
+            //velocidadFondo=0;}
+        }
         break;
     }
     case Qt::Key_W:
@@ -114,10 +167,10 @@ void FirstScene::keyPressEvent(QKeyEvent *event) {
         //jugador->setY(jugador->getY() -10);
         break;
     case Qt::Key_S:{
-         // Solo puede bajar si no está saltando y hay espacio abajo
-            //jugador->setY(jugador->getY() + 5); // Baja una pequeña distancia
-            jugador->moverJugador(abajo);
-            //jugador->setPos(jugador->getX(), jugador->getY());
+        // Solo puede bajar si no está saltando y hay espacio abajo
+        //jugador->setY(jugador->getY() + 5); // Baja una pequeña distancia
+        jugador->moverJugador(abajo);
+        //jugador->setPos(jugador->getX(), jugador->getY());
 
         //jugador->moverJugador(abajo);
         //jugador->setY(jugador->getY() + 5);
@@ -128,51 +181,37 @@ void FirstScene::keyPressEvent(QKeyEvent *event) {
     }
     }
 
+    if ((jugador->getX()<=limiteIzquierda) ||(jugador->getX()>=limiteDerecha)) {
+        jugador->detenerJugador();
+        jugador->setX(posX);
+        jugador->setY(posY);
+    }
     jugador->setPos(jugador->getX(), jugador->getY());
 
     // Validar si está sobre una plataforma
-    if (!sobrePlataforma()) {
-        jugador->setPos(posX, posY); // Revertir movimiento
-        jugador->detenerJugador();
-        return;
-    }
 }
 
 void FirstScene::keyReleaseEvent(QKeyEvent *event) {
+
     teclasPresionadas.remove(event->key()); // Eliminar la tecla liberada
 
-    // Verificar si quedan teclas activas que controlen movimiento
-    bool hayTeclasActivas = teclasPresionadas.contains(Qt::Key_A) ||
-                            teclasPresionadas.contains(Qt::Key_D) ||
-                            teclasPresionadas.contains(Qt::Key_W) ||
-                            teclasPresionadas.contains(Qt::Key_S);
-
-    if (!hayTeclasActivas) {
-        // Detener jugador y animación si no hay teclas relevantes activas
-        jugador->detenerJugador();
-         // Detén la animación
-        velocidadFondo = 0; // Detener el movimiento del fondo
+    // Verificar qué tecla fue soltada y detener al jugador
+    if (event->key() == Qt::Key_A || event->key() == Qt::Key_D) {
+        velocidadFondo = 0; // Detener el fondo
+        jugador->detenerJugador(); // Detener el movimiento del jugador
+    }
+    else if (event->key() == Qt::Key_W) {
+        //enSalto = false; // Permitir saltar nuevamente después de liberar la tecla
+    }
+    else if (event->key() == Qt::Key_S) {
+       // enBajo = false; // Detener el movimiento hacia abajo
     }
 }
 
-void FirstScene::moverFondo() {
-    // Actualiza la posición del fondo
-    if (velocidadFondo == 0) return; // No mover si no hay velocidad
-
-    int nuevaPosX = fondo->x() + velocidadFondo;
-
-    // Limitar el desplazamiento dentro de un rango
-    int maxDesplazamiento = 500;
-    if (nuevaPosX > maxDesplazamiento) {
-        nuevaPosX = maxDesplazamiento;
-    }
-
-    fondo->setX(nuevaPosX); // Aplica la n // Aplica la nueva posición en X al fondo
-}
 void FirstScene::establecerPlataformas(){
     int posicion=0;
     for (int i = 0; i < plataformas.size(); ++i) {
-        QGraphicsRectItem *plataforma = new QGraphicsRectItem(0,390+posicion, 1500, 10);
+        QGraphicsRectItem *plataforma = new QGraphicsRectItem(0,390+posicion, 3532, 10);
         plataforma->setBrush(Qt::darkGray);
         addItem(plataforma);
         plataformas[i] = plataforma; // Asigna la plataforma en el índice i
@@ -183,13 +222,59 @@ void FirstScene::establecerPlataformas(){
     }
 }
 
+void FirstScene::establecerCajas(){
+    qDebug() << "creando cajas";
+
+    int indiceCaja = 0;
+    int posicionX=110;
+    int posicionY=348;
+    for (int var = 0; var < 3; ++var) {
+        for (int var = 0; var < 9; ++var) {
+            // Crear un nuevo objeto QGraphicsPixmapItem para la caja
+            QGraphicsPixmapItem *caja = new QGraphicsPixmapItem(QPixmap(":/imagenes/caja.jpg"));
+
+            addItem(caja);
+            caja->setPos(posicionX, posicionY);
+            cajas[indiceCaja] = caja;
+            ++indiceCaja;
+            if (var% 6==5) {
+                posicionX +=600;
+                posicionY=698;
+            }else if(var % 3 == 2){
+                posicionX +=600;
+                posicionY=538;
+            }
+            else{
+                posicionY-=50;
+            }
+
+        }
+        if(var==1){
+            posicionX=1000;
+            posicionY=348;
+
+        }
+        if(var==2){
+            posicionX=2000;
+            posicionY=348;
+        }
+
+    }
+
+}
+
 FirstScene::~FirstScene() {
     delete fondo;
     delete jugador;
     delete timerFondo;
     delete timerGravedad;
+    delete vista;
     for (auto plataforma : plataformas) {
         delete plataforma;
+    }
+    for (int i = 0; i < Ncajas; ++i) {
+        delete cajas[i];
+        cajas[i] = nullptr;
     }
 }
 bool FirstScene::sobrePlataforma() {

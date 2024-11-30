@@ -44,6 +44,7 @@ public:
     int getY() const;
     void setY(int newY);
     QGraphicsRectItem *getPies() const;
+    Direccion getCurrentDirection() const;
 };
 
 #endif // BOB_H
