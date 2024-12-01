@@ -71,9 +71,9 @@ FirstScene::FirstScene(MainWindow *parent)
     // Establecer posición inicial del Pixman
     llave->setPos(1730, 500); // Posición X, Y en la escena
     pixmanDirection=1;
-
     // Agregar Pixman a la escena
     addItem(llave);
+    llaveV=false;
 }
 bool FirstScene::puedeBajar() {
     QRectF rectPies = jugador->getPies()->sceneBoundingRect(); // Rectángulo global de los pies
@@ -589,15 +589,47 @@ void FirstScene::dispararE1_(){
 
 }
 void FirstScene::moverItemsF(){
-    QPointF posActual = llave->pos();
+    if(llave){
+        QPointF posActual = llave->pos();
 
-    // Oscilar en un rango de 10 píxeles (5 arriba y 5 abajo)
-    if (pixmanDirection == 1 && posActual.y() == 510){
-        pixmanDirection = -1; // Cambiar dirección hacia abajo
-    } else if (pixmanDirection == -1 && posActual.y() == 490) {
-        pixmanDirection = 1; // Cambiar dirección hacia arriba
+        // Oscilar en un rango de 10 píxeles (5 arriba y 5 abajo)
+        if (pixmanDirection == 1 && posActual.y() == 510){
+            pixmanDirection = -1; // Cambiar dirección hacia abajo
+        } else if (pixmanDirection == -1 && posActual.y() == 490) {
+            pixmanDirection = 1; // Cambiar dirección hacia arriba
+        }
+
+        // Actualizar la posición vertical
+        llave->setY(posActual.y() + pixmanDirection);
+
     }
+    colisionItems();
 
-    // Actualizar la posición vertical
-    llave->setY(posActual.y() + pixmanDirection);
+}
+void FirstScene::colisionItems(){
+            for (auto it = galletas.begin(); it != galletas.end(); ) {
+                if (jugador->collidesWithItem(*it)) {
+                    qDebug() << "¡Pixman recogido!";
+                    removeItem(*it);      // Eliminar Pixman de la escena
+                    delete *it;
+                    *it=nullptr;                    // Liberar memoria
+                    it = galletas.erase(it); // Eliminar del vector y ajustar el iterador
+                    golpeDaño += 10;
+                    return;                 // Incrementar el daño
+                } else {
+                    ++it; // Avanzar al siguiente elemento si no hay colisión
+                }
+            }
+            if(llave){
+                if (jugador->collidesWithItem(llave)) {
+                    qDebug() << "¡Pixman recogido!";
+                    removeItem(llave); // Eliminar Pixman de la escena
+                    delete llave; // Liberar memoria
+                    llave=nullptr;
+                    //con llave v activa podemos pasar al siguiente nivel
+                    llaveV=true;
+                    // pixmanRecogido = true; // Marca como recogido
+                }
+
+            }
 }

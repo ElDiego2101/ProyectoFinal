@@ -35,6 +35,7 @@ public:
     void dispararE1_();
     void moverItemsF();
     void establecerGalletas();
+    void colisionItems();
 private slots:
     void moverFondo();  // Función para manejar el movimiento del fondo
 
@@ -52,6 +53,7 @@ private:
     bool colisionDerecha;
     bool colisionIzquierda;
     bool veri;
+    bool llaveV;
     QGraphicsPixmapItem *fondo;    // Imagen del fondo
     QGraphicsPixmapItem *llave;
     int velocidadFondo;         // Velocidad del fondo
