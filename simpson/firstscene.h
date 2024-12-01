@@ -27,9 +27,10 @@ public:
     bool colisionCaja();
     bool colisionEnemigos1(enemigol1* enemigo1_);
     bool choquePlataforma(proyectil* bala);
+    bool puedeBajar();
+    bool colisionProyectil1(proyectil* proyectil_);
     void detecionEnemigos1();
     void aplicarGravedad();
-    bool puedeBajar();
     void establecerPlataformas();
     void establecerCajas();
     void establecerEnemigos1();

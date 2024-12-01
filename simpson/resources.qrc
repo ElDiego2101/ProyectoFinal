@@ -15,5 +15,6 @@
         <file>imagenes/enemigoS.png</file>
         <file>imagenes/llave.png</file>
         <file>imagenes/galleta.png</file>
+        <file>imagenes/bala.png</file>
     </qresource>
 </RCC>

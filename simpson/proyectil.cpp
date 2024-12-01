@@ -37,12 +37,24 @@ void proyectil::dibujarProyectil(){
 }
 void proyectil::actualizarMovimiento() {
     // Movimiento parabólico
-    if(direccion){
-        setPos(x() + velocidadX, y() + velocidadY);
-        velocidadY += gravedad; // Aumenta la velocidad en Y por gravedad
+    if(tipo){
+        if(direccion){
+            setPos(x() + velocidadX, y() + velocidadY);
+            velocidadY += gravedad; // Aumenta la velocidad en Y por gravedad
+        }else{
+            setPos(x() - velocidadX, y() + velocidadY);
+            velocidadY += gravedad;
+
+        }
+
     }else{
-        setPos(x() - velocidadX, y() + velocidadY);
-        velocidadY += gravedad;
+        if(direccion){
+            setPos(x() + velocidadX, y());
+              // Aumenta la velocidad en Y por gravedad
+        }else{
+            setPos(x() - velocidadX, y());
+
+        }
 
     }
 

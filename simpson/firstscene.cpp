@@ -24,7 +24,7 @@ FirstScene::FirstScene(MainWindow *parent)
             }
 
             // Eliminar el proyectil si se sale de la escena
-            if (proyectilActivo->y() > 768 || proyectilActivo->x() > 3532 || proyectilActivo->x() < 0) {
+            if (proyectilActivo->y() > 768 || proyectilActivo->x() > 3532 || proyectilActivo->x() < 0 || colisionProyectil1(proyectilActivo)) {
                 timerMovimientoProyectil->stop(); // Detener el timer
                 removeItem(proyectilActivo);     // Quitar el proyectil de la escena
                 delete proyectilActivo;         // Liberar memoria del proyectil
@@ -586,13 +586,19 @@ void FirstScene::moverEnemigo1(){
 bool FirstScene::colisionEnemigos1(enemigol1* enemigo1_){
     for (auto *caja:cajas) {
         if (enemigo1_->collidesWithItem(caja)) {
-            qDebug() << "colision detectada1";
             return true; // Si hay colisión con alguna caja
         }
 }
     return false;
 }
-
+bool FirstScene::colisionProyectil1(proyectil* proyectil_){
+    for (auto *caja:cajas) {
+        if (proyectil_->collidesWithItem(caja)) {
+            return true; // Si hay colisión con alguna caja
+        }
+    }
+    return false;
+}
 void FirstScene::detecionEnemigos1(){
 
     for (auto& enemigo : enemigos1) {
@@ -622,6 +628,38 @@ void FirstScene::detecionEnemigos1(){
                 // Iniciar disparo y animación
                 enemigo->setCurrentDirection(golpe);
                 enemigo->startGolpeAnimacion();
+
+                proyectil* nuevoProyectil = new proyectil();
+                nuevoProyectil->setTipo(false);
+                nuevoProyectil->dibujarProyectil();
+                if(jugador->getX() < enemigo->getX()){
+                    nuevoProyectil->setDireccion(false);
+                }
+                nuevoProyectil->setPos(enemigo->getX(), enemigo->getY()+30);
+                addItem(nuevoProyectil);
+                enemigo->setProyectilActivo(nuevoProyectil); // Asignar proyectil al enemigo
+
+                // Timer para mover el proyectil
+                QTimer* timerProyectil = new QTimer(this);
+                connect(timerProyectil, &QTimer::timeout, [nuevoProyectil, enemigo, timerProyectil, this]() {
+                    nuevoProyectil->actualizarMovimiento();
+
+                    // Verificar colisiones con plataformas
+                    if (choquePlataforma(nuevoProyectil)) {
+                        nuevoProyectil->cambiarDireccion();
+                    }
+
+                    // Verificar si el proyectil sale de los límites
+                    if (nuevoProyectil->y() > 768 || nuevoProyectil->x() > 3532 || nuevoProyectil->x() < 0 || colisionProyectil1(nuevoProyectil)) {
+                        removeItem(nuevoProyectil);
+                        delete nuevoProyectil;
+                        enemigo->eliminarProyectil();
+                        timerProyectil->stop();
+                        timerProyectil->deleteLater(); // Eliminar el timer
+                    }
+                });
+
+                timerProyectil->start(30);
 
                 // Retrasar el próximo disparo
                 enemigo->iniciarCooldownDisparo();

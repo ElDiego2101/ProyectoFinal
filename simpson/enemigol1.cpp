@@ -142,6 +142,19 @@ void enemigol1::cambiarDireccion(){
 
     lastDirection = currentDirection; // Actualizar última dirección
 }
+proyectil *enemigol1::getProyectilActivo() const
+{
+    return proyectilActivo;
+}
+bool enemigol1::tieneProyectilActivo() const{
+    return proyectilActivo != nullptr;
+}
+void enemigol1::setProyectilActivo(proyectil *proyectil){
+     proyectilActivo = proyectil;
+}
+void enemigol1::eliminarProyectil(){
+   proyectilActivo = nullptr;
+}
 void enemigol1::nextFrame(){
         if (currentDirection == ninguna)
             return;
