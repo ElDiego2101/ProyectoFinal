@@ -15,7 +15,8 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     mscene.cpp \
-    personaje.cpp
+    personaje.cpp \
+    proyectil.cpp
 
 HEADERS += \
     bob.h \
@@ -23,7 +24,8 @@ HEADERS += \
     firstscene.h \
     mainwindow.h \
     mscene.h \
-    personaje.h
+    personaje.h \
+    proyectil.h
 
 FORMS += \
     mainwindow.ui

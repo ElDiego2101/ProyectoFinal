@@ -12,6 +12,27 @@ FirstScene::FirstScene(MainWindow *parent)
     fondo->setPos(0, 0);  // Posición inicial del fondo
     addItem(fondo);       // Agrega el fondo a la escena
 
+    proyectilActivo = nullptr; // Puntero al proyectil actual
+    timerMovimientoProyectil=new QTimer(this);
+    connect(timerMovimientoProyectil, &QTimer::timeout, this, [this]() {
+        if (proyectilActivo) {
+            proyectilActivo->actualizarMovimiento();
+
+            // Verificar colisión con plataformas
+            if (choquePlataforma(proyectilActivo)) {
+                proyectilActivo->cambiarDireccion(); // Cambiar dirección si hay colisión
+            }
+
+            // Eliminar el proyectil si se sale de la escena
+            if (proyectilActivo->y() > 768 || proyectilActivo->x() > 3532 || proyectilActivo->x() < 0) {
+                timerMovimientoProyectil->stop(); // Detener el timer
+                removeItem(proyectilActivo);     // Quitar el proyectil de la escena
+                delete proyectilActivo;         // Liberar memoria del proyectil
+                proyectilActivo = nullptr;      // Resetear el puntero
+            }
+        }
+    });
+
     // Configura el temporizador para el movimiento continuo
     timerFondo = new QTimer(this);
     connect(timerFondo, &QTimer::timeout, this, &FirstScene::moverFondo);
@@ -272,6 +293,25 @@ void FirstScene::keyPressEvent(QKeyEvent *event) {
     jugador->setPos(jugador->getX(), jugador->getY());
 
     // Validar si está sobre una plataforma
+    if (event->key() == Qt::Key_X) {
+        if (event->key() == Qt::Key_X) {
+            if (proyectilActivo) {
+                qDebug() << "Ya hay un proyectil activo. No se puede disparar otro.";
+                return; // Evitar disparar un nuevo proyectil si ya hay uno activo
+            }
+
+            proyectilActivo = new proyectil();
+            proyectilActivo->dibujarProyectil();
+            if(jugador->getLastDirection()==izquierda){
+                proyectilActivo->setDireccion(false);
+            }
+            proyectilActivo->setPos(jugador->getX(), jugador->getY()+30); // Aparece donde está el jugador
+            addItem(proyectilActivo);
+
+            timerMovimientoProyectil->start(30); // Iniciar el movimiento
+        }
+        // Ajusta el tiempo de actualización
+    }
 
 }
 
@@ -423,6 +463,15 @@ bool FirstScene::sobrePlataforma() {
    }
   }
   return false;
+
+}
+bool FirstScene::choquePlataforma(proyectil* bala) {
+    for (auto *plataforma : plataformas) {
+        if (bala->collidesWithItem(plataforma)) {
+            return true;
+        }
+    }
+    return false;
 
 }
 bool FirstScene::colisionCaja(){

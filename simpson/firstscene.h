@@ -8,6 +8,7 @@
 #include <QGraphicsRectItem>
 #include <bob.h>
 #include "enemigol1.h"
+#include "proyectil.h"
 #include <QSet>
 #define  Ncajas 27
 
@@ -25,6 +26,7 @@ public:
     bool sobrePlataforma();
     bool colisionCaja();
     bool colisionEnemigos1(enemigol1* enemigo1_);
+    bool choquePlataforma(proyectil* bala);
     void detecionEnemigos1();
     void aplicarGravedad();
     bool puedeBajar();
@@ -65,6 +67,8 @@ private:
     QTimer* deteccionE1;
     QTimer* dispararE1;
     QTimer* moverItems;
+    proyectil* proyectilActivo; // Puntero al proyectil actual
+    QTimer* timerMovimientoProyectil;
     QSet<int> teclasPresionadas;
 
     std::array<QGraphicsPixmapItem*,27> cajas;
