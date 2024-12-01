@@ -599,6 +599,15 @@ bool FirstScene::colisionProyectil1(proyectil* proyectil_){
     }
     return false;
 }
+bool FirstScene::colisionbalaJ(proyectil* proyectil_){
+    if(proyectil_){
+        if(jugador->collidesWithItem(proyectil_)){
+            return true;
+        }
+        return false;
+
+    }
+}
 void FirstScene::detecionEnemigos1(){
 
     for (auto& enemigo : enemigos1) {
@@ -649,6 +658,7 @@ void FirstScene::detecionEnemigos1(){
                         nuevoProyectil->cambiarDireccion();
                     }
 
+
                     // Verificar si el proyectil sale de los límites
                     if (nuevoProyectil->y() > 768 || nuevoProyectil->x() > 3532 || nuevoProyectil->x() < 0 || colisionProyectil1(nuevoProyectil)) {
                         removeItem(nuevoProyectil);
@@ -656,6 +666,20 @@ void FirstScene::detecionEnemigos1(){
                         enemigo->eliminarProyectil();
                         timerProyectil->stop();
                         timerProyectil->deleteLater(); // Eliminar el timer
+                    }
+                    else if(colisionbalaJ(nuevoProyectil)){
+                        if(jugador->getVida()>0){
+                            jugador->setVida(jugador->getVida()-20);
+
+                        }else{
+                            qDebug() << "se nos acabo la vida";
+                            resetGame();
+                        }
+                        removeItem(nuevoProyectil);
+                        delete nuevoProyectil;
+                        enemigo->eliminarProyectil();
+                        timerProyectil->stop();
+                        timerProyectil->deleteLater();
                     }
                 });
 
@@ -720,3 +744,4 @@ void FirstScene::colisionItems(){
 
             }
 }
+void FirstScene::resetGame(){}

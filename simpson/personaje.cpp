@@ -47,6 +47,16 @@ void personaje::setLastDirection(Direccion newLastDirection)
     lastDirection = newLastDirection;
 }
 
+short personaje::getVida() const
+{
+    return vida;
+}
+
+void personaje::setVida(short newVida)
+{
+    vida = newVida;
+}
+
 personaje::personaje(QGraphicsItem *parent):QGraphicsPixmapItem(parent),
     x(0), y(0), dx(0), dy(0),
     frameHeight(0), frameWidth(0), // Ejemplo de tamaños de cuadro

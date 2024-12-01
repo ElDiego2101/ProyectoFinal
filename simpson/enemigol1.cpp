@@ -3,7 +3,7 @@
 enemigol1::enemigol1(QGraphicsItem *parent):personaje(parent) {
     x=600;
     y=605;
-
+    vida=100;
     frameHeight = 150;
     frameWidth = 200;
     currentFrame = 0;

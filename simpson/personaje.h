@@ -21,6 +21,7 @@ class personaje:public QObject,public QGraphicsPixmapItem
     Q_OBJECT
 protected:
     int x;
+    short vida;
     int y;
     int dx;
     int dy;
@@ -49,6 +50,8 @@ public:
   void setCurrentDirection(Direccion newCurrentDirection);
   Direccion getLastDirection() const;
   void setLastDirection(Direccion newLastDirection);
+  short getVida() const;
+  void setVida(short newVida);
 };
 
 #endif // PERSONAJE_H

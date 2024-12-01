@@ -5,6 +5,7 @@
 bob::bob(QGraphicsItem *parent)
     : personaje(parent) {
     //inicializo
+    vida=100;
     x = 0;
     y = 600;
     dx = 5;
