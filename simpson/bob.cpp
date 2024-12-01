@@ -9,7 +9,7 @@ bob::bob(QGraphicsItem *parent)
     y = 600;
     dx = 5;
     dy = 5;
-    frameHeight = 151;
+    frameHeight = 150;
     frameWidth = 200;
     currentFrame = 0;
     currentDirection = ninguna;

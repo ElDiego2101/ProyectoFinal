@@ -7,6 +7,7 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsRectItem>
 #include <bob.h>
+#include "enemigol1.h"
 #include <QSet>
 #define  Ncajas 27
 
@@ -23,16 +24,21 @@ public:
     void keyReleaseEvent(QKeyEvent *event) override;
     bool sobrePlataforma();
     bool colisionCaja();
+    bool colisionEnemigos1(enemigol1* enemigo1_);
+    void detecionEnemigos1();
     void aplicarGravedad();
     bool puedeBajar();
     void establecerPlataformas();
     void establecerCajas();
+    void establecerEnemigos1();
+    void moverEnemigo1();
 
 private slots:
     void moverFondo();  // Función para manejar el movimiento del fondo
 
 private:
     MainWindow *mainWindow;
+    int cantidadEnemigos;
     int vidas;
     int puntuacion;
     bool juegoPausado;
@@ -49,8 +55,11 @@ private:
     QTimer *timerAnimacionJugador;
     QTimer *timerGravedad;
     QTimer* simuladorTecla;
+    QTimer* movimientoEnemigo1;
+    QTimer* deteccionE1;
     QSet<int> teclasPresionadas;
-    std::array<QGraphicsPixmapItem*,27> cajas;       // Temporizador para actualizar el fondo
+    std::array<QGraphicsPixmapItem*,27> cajas;
+    std::vector<enemigol1*> enemigos1;        // Temporizador para actualizar el fondo
     std::array<QGraphicsRectItem*, 3> plataformas;
     bob *jugador; //mi puntero a mi personaje bob patiño
     bool enSalto; // Indica si el jugador está actualmente saltando

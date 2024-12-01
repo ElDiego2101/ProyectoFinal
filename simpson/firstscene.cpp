@@ -21,10 +21,11 @@ FirstScene::FirstScene(MainWindow *parent)
     connect(timerGravedad, &QTimer::timeout, this, &FirstScene::aplicarGravedad);
     timerGravedad->start(30);
     golpeDaño=10;
-
+    cantidadEnemigos=6;
     // Cambia según la cantidad necesaria
     establecerCajas();
     establecerPlataformas();
+    establecerEnemigos1();
 
 
     //vamos a establecer los parametros del jugador
@@ -44,11 +45,16 @@ FirstScene::FirstScene(MainWindow *parent)
     colisionDerecha=false;
     colisionIzquierda=false;
 
-    //puntero de cajas
-   // for (int i = 0; i < Ncajas; ++i) {
-   //    cajas[i] = nullptr;
-    //}
-
+    //inicializar el movimiento de los enemigos1
+    if (!movimientoEnemigo1) {
+        movimientoEnemigo1 = new QTimer(this);
+        connect(movimientoEnemigo1, &QTimer::timeout, this, &FirstScene::moverEnemigo1);
+        movimientoEnemigo1->start(50); // Actualiza cada 50 ms
+    }
+    //deteccion de bob por parte de los enemigos 1
+    deteccionE1=new QTimer(this);
+    connect(deteccionE1,&QTimer::timeout,this,&FirstScene::detecionEnemigos1);
+    deteccionE1->start(50);
 }
 bool FirstScene::puedeBajar() {
     QRectF rectPies = jugador->getPies()->sceneBoundingRect(); // Rectángulo global de los pies
@@ -268,7 +274,7 @@ void FirstScene::keyReleaseEvent(QKeyEvent *event) {
 }
 void FirstScene::establecerPlataformas(){
     int posicion=0;
-    for (int i = 0; i < plataformas.size(); ++i) {
+    for (auto i = 0; i < plataformas.size(); ++i) {
         QGraphicsRectItem *plataforma = new QGraphicsRectItem(0,390+posicion, 3532, 10);
         plataforma->setBrush(Qt::darkGray);
         addItem(plataforma);
@@ -279,7 +285,42 @@ void FirstScene::establecerPlataformas(){
         }
     }
 }
+void FirstScene::establecerEnemigos1(){
+    for (auto var = 0; var < cantidadEnemigos; ++var) {
+        enemigol1* enemigo1 = new enemigol1;
+        //vamos a manejar manualmente las apareciones de las enemigos
+        //para asi tener el juego dinamico con la dificultad
+        if(var==0){
+        }else if(var==1){
+            enemigo1->setY(248);
+            enemigo1->setX(2000);
+        }else if(var==2){
+            enemigo1->setY(248);
+            enemigo1->setX(2080);
 
+        }else if(var==3){
+            enemigo1->setY(438);
+            enemigo1->setX(3100);
+
+        }else if(var==4){
+            enemigo1->setY(438);
+            enemigo1->setX(3200);
+        }else if(var==5){
+            enemigo1->setY(600);
+            enemigo1->setX(3000);
+
+        }else if(var==6){
+            enemigo1->setY(600);
+            enemigo1->setX(3100);
+            addItem(enemigo1);
+
+        } // Agregar al vector
+        addItem(enemigo1);
+        enemigo1->setPos(enemigo1->getX(), enemigo1->getY());
+        enemigos1.push_back(enemigo1);
+    }
+
+}
 void FirstScene::establecerCajas(){
     qDebug() << "creando cajas";
 
@@ -335,6 +376,10 @@ FirstScene::~FirstScene() {
     for (auto caja :cajas) {
         delete caja;
     }
+    for (auto& enemigo : enemigos1) {
+        delete enemigo; // Liberar la memoria
+    }
+    enemigos1.clear();
 }
 bool FirstScene::sobrePlataforma() {
   for (auto *plataforma : plataformas) {
@@ -394,4 +439,51 @@ void FirstScene::aplicarGravedad() {
             velocidadSalto = 0;
         }
     }
+}
+void FirstScene::moverEnemigo1(){
+    for (auto& enemigo : enemigos1) {
+        // Comprobamos si hay colisión con el escenario o algún obstáculo
+        if (colisionEnemigos1(enemigo)) {
+            // Si hay colisión, cambiamos la dirección del enemigo
+            if(enemigo->getCurrentDirection()==derecha){
+                enemigo->setX(enemigo->getX()-2);
+                enemigo->setPos(enemigo->getX(),enemigo->getY());
+
+            }else if(enemigo->getCurrentDirection()==izquierda){
+                enemigo->setX(enemigo->getX()+2);
+                enemigo->setPos(enemigo->getX(),enemigo->getY());
+            }
+            enemigo->cambiarDireccion();
+
+        } else if(enemigo->getX()<2){
+            enemigo->setX(enemigo->getX()+2);
+            enemigo->setPos(enemigo->getX(),enemigo->getY());
+            enemigo->cambiarDireccion();
+        }else if(enemigo->getX()>3530){
+            enemigo->setX(enemigo->getX()-2);
+            enemigo->setPos(enemigo->getX(),enemigo->getY());
+            enemigo->cambiarDireccion();
+
+        }
+        else {
+            // Si no hay colisión, movemos al enemigo en la dirección actual
+            enemigo->moverJugador(enemigo->getCurrentDirection());
+        }
+    }
+}
+bool FirstScene::colisionEnemigos1(enemigol1* enemigo1_){
+    for (auto *caja:cajas) {
+        if (enemigo1_->collidesWithItem(caja)) {
+            qDebug() << "colision detectada1";
+            return true; // Si hay colisión con alguna caja
+        }
+}
+    return false;
+}
+
+void FirstScene::deteccionE1(){
+    for(auto& enemigo : enemigos1 ){
+
+    }
+
 }

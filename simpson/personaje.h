@@ -13,7 +13,8 @@ enum  Direccion{
     abajo,
     izquierda,
     derecha,
-    golpe
+    golpe,
+    deteccion
 };
 class personaje:public QObject,public QGraphicsPixmapItem
 {
