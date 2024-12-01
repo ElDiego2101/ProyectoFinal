@@ -54,12 +54,12 @@ FirstScene::FirstScene(MainWindow *parent)
     //deteccion de bob por parte de los enemigos 1
     deteccionE1=new QTimer(this);
     connect(deteccionE1,&QTimer::timeout,this,&FirstScene::detecionEnemigos1);
-    deteccionE1->start(50);
+    deteccionE1->start(110);
 
     //disparo del primer enemigo
     dispararE1=new QTimer(this);
     connect(dispararE1,&QTimer::timeout,this,&FirstScene::dispararE1_);
-    dispararE1->start(50);
+    dispararE1->start(60);
 }
 bool FirstScene::puedeBajar() {
     QRectF rectPies = jugador->getPies()->sceneBoundingRect(); // Rectángulo global de los pies
@@ -297,18 +297,18 @@ void FirstScene::establecerEnemigos1(){
         //para asi tener el juego dinamico con la dificultad
         if(var==0){
         }else if(var==1){
-            enemigo1->setY(248);
+            enemigo1->setY(250);
             enemigo1->setX(2000);
         }else if(var==2){
-            enemigo1->setY(248);
+            enemigo1->setY(250);
             enemigo1->setX(2080);
 
         }else if(var==3){
-            enemigo1->setY(438);
+            enemigo1->setY(440);
             enemigo1->setX(3100);
 
         }else if(var==4){
-            enemigo1->setY(438);
+            enemigo1->setY(440);
             enemigo1->setX(3200);
         }else if(var==5){
             enemigo1->setY(600);
@@ -489,11 +489,18 @@ void FirstScene::moverEnemigo1(){
         }
         if (enemigo->enCooldown()) {
             if (enemigo->getLastDirection() == derecha) {
-                enemigo->setX(enemigo->getX() - 2); // Retrocede a la izquierda
+                enemigo->setX(enemigo->getX() - 1); // Retrocede a la izquierda
             } else {
-                enemigo->setX(enemigo->getX() + 2); // Retrocede a la derecha
+                enemigo->setX(enemigo->getX() + 1); // Retrocede a la derecha
             }
             enemigo->setPos(enemigo->getX(), enemigo->getY());
+        }else if (enemigo->finalizoCooldown()) {
+            // Avanzar en dirección contraria al retroceso
+            if (enemigo->getLastDirection() == izquierda) {
+                enemigo->setCurrentDirection(derecha);
+            } else {
+                enemigo->setCurrentDirection(izquierda);                // Ahora avanza a la derecha
+            }
         }
     }
 }

@@ -7,6 +7,7 @@ class enemigol1:public personaje
      Q_OBJECT
 private:
      bool enCooldownDisparo;
+     bool cooldownFinalizado;
      QTimer cooldownTimer;
 
 private slots:
@@ -21,6 +22,7 @@ public:
     void cambiarDireccion();
     void startGolpeAnimacion();
     bool puedeDisparar();
+    bool finalizoCooldown();
     void iniciarCooldownDisparo();
     bool enCooldown();
 };

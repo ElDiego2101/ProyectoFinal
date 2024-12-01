@@ -27,6 +27,7 @@ enemigol1::enemigol1(QGraphicsItem *parent):personaje(parent) {
    // pies->setBrush(QBrush(Qt::red)); // QBrush para "transpar
 
     enCooldownDisparo = false;
+    cooldownFinalizado = false;
 }
 void enemigol1::dibujarJugador() {
     int frameX = currentFrame * frameWidth; // Columna actual
@@ -63,15 +64,18 @@ void enemigol1::dibujarJugador() {
         setPixmap(spriteSheet.copy(frameX, frameY, frameWidth, frameHeight));
 }
 void enemigol1::moverJugador(Direccion direccion){
+    if(currentDirection==golpe){
+        return;
+    }
     if(currentDirection != direccion && currentDirection !=golpe) {
         currentDirection = direccion;
         lastDirection = (direccion == derecha || direccion == izquierda) ? direccion : lastDirection;
         currentFrame = 0;           // Reinicia la animación
             // Inicia temporizador (100 ms por cuadro)
-        timerAnimacion->start(100);
+        timerAnimacion->start(150);
     }
     if (!timerAnimacion->isActive()) {
-        timerAnimacion->start(100); // Inicia la animación si no está activa
+        timerAnimacion->start(150); // Inicia la animación si no está activa
     }
     int desplazamiento = 5; // Velocidad del enemigo
     // Mover en la dirección actual
@@ -164,12 +168,19 @@ bool enemigol1::puedeDisparar(){
 }
 void enemigol1::iniciarCooldownDisparo(){
     enCooldownDisparo = true;
-    cooldownTimer.singleShot(1000, [this]() { // Cooldown de 2 segundos
+    cooldownTimer.singleShot(500, [this]() { // Cooldown de 2 segundos
         enCooldownDisparo = false;
     });
 }
 bool enemigol1::enCooldown(){
     return enCooldownDisparo;
+}
+bool enemigol1::finalizoCooldown(){
+    if (cooldownFinalizado) {
+        cooldownFinalizado = false; // Resetea el estado
+        return true;
+    }
+    return false;
 }
 enemigol1::~enemigol1(){
     delete timerAnimacion;
