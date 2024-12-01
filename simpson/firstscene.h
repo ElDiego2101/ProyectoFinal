@@ -32,6 +32,7 @@ public:
     void establecerCajas();
     void establecerEnemigos1();
     void moverEnemigo1();
+    void dispararE1_();
 
 private slots:
     void moverFondo();  // Función para manejar el movimiento del fondo
@@ -57,6 +58,7 @@ private:
     QTimer* simuladorTecla;
     QTimer* movimientoEnemigo1;
     QTimer* deteccionE1;
+    QTimer* dispararE1;
     QSet<int> teclasPresionadas;
     std::array<QGraphicsPixmapItem*,27> cajas;
     std::vector<enemigol1*> enemigos1;        // Temporizador para actualizar el fondo

@@ -6,6 +6,8 @@ class enemigol1:public personaje
 {
      Q_OBJECT
 private:
+     bool enCooldownDisparo;
+     QTimer cooldownTimer;
 
 private slots:
      void nextFrame();
@@ -17,6 +19,10 @@ public:
     void moverJugador(Direccion direccion);  // Mueve al jugador
     void detenerJugador() override;
     void cambiarDireccion();
+    void startGolpeAnimacion();
+    bool puedeDisparar();
+    void iniciarCooldownDisparo();
+    bool enCooldown();
 };
 
 #endif // ENEMIGOL1_H

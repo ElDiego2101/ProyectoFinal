@@ -46,6 +46,9 @@ public:
   void setY(int newY);
   QGraphicsRectItem *getPies() const;
   Direccion getCurrentDirection() const;
+  void setCurrentDirection(Direccion newCurrentDirection);
+  Direccion getLastDirection() const;
+  void setLastDirection(Direccion newLastDirection);
 };
 
 #endif // PERSONAJE_H

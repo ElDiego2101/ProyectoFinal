@@ -55,6 +55,11 @@ FirstScene::FirstScene(MainWindow *parent)
     deteccionE1=new QTimer(this);
     connect(deteccionE1,&QTimer::timeout,this,&FirstScene::detecionEnemigos1);
     deteccionE1->start(50);
+
+    //disparo del primer enemigo
+    dispararE1=new QTimer(this);
+    connect(dispararE1,&QTimer::timeout,this,&FirstScene::dispararE1_);
+    dispararE1->start(50);
 }
 bool FirstScene::puedeBajar() {
     QRectF rectPies = jugador->getPies()->sceneBoundingRect(); // Rectángulo global de los pies
@@ -446,12 +451,25 @@ void FirstScene::moverEnemigo1(){
         if (colisionEnemigos1(enemigo)) {
             // Si hay colisión, cambiamos la dirección del enemigo
             if(enemigo->getCurrentDirection()==derecha){
-                enemigo->setX(enemigo->getX()-2);
+                //enemigo->setLastDirection(derecha);
+                enemigo->setX(enemigo->getX()-5);
                 enemigo->setPos(enemigo->getX(),enemigo->getY());
 
             }else if(enemigo->getCurrentDirection()==izquierda){
-                enemigo->setX(enemigo->getX()+2);
+               // enemigo->setLastDirection(izquierda);
+                enemigo->setX(enemigo->getX()+5);
                 enemigo->setPos(enemigo->getX(),enemigo->getY());
+            }
+            else if(enemigo->getCurrentDirection()==deteccion){
+                if(enemigo->getLastDirection()==izquierda){
+                    enemigo->setX(enemigo->getX()+5);
+                    enemigo->setPos(enemigo->getX(),enemigo->getY());
+
+                }else if(enemigo->getLastDirection()==derecha){
+                    enemigo->setX(enemigo->getX()-5);
+                    enemigo->setPos(enemigo->getX(),enemigo->getY());
+
+                }
             }
             enemigo->cambiarDireccion();
 
@@ -469,6 +487,14 @@ void FirstScene::moverEnemigo1(){
             // Si no hay colisión, movemos al enemigo en la dirección actual
             enemigo->moverJugador(enemigo->getCurrentDirection());
         }
+        if (enemigo->enCooldown()) {
+            if (enemigo->getLastDirection() == derecha) {
+                enemigo->setX(enemigo->getX() - 2); // Retrocede a la izquierda
+            } else {
+                enemigo->setX(enemigo->getX() + 2); // Retrocede a la derecha
+            }
+            enemigo->setPos(enemigo->getX(), enemigo->getY());
+        }
     }
 }
 bool FirstScene::colisionEnemigos1(enemigol1* enemigo1_){
@@ -481,9 +507,43 @@ bool FirstScene::colisionEnemigos1(enemigol1* enemigo1_){
     return false;
 }
 
-void FirstScene::deteccionE1(){
-    for(auto& enemigo : enemigos1 ){
+void FirstScene::detecionEnemigos1(){
 
+    for (auto& enemigo : enemigos1) {
+        // Calcular distancias entre el jugador y el enemigo
+        int distanciaX = std::abs(jugador->getX() - enemigo->getX());
+        int distanciaY = std::abs(jugador->getY() - enemigo->getY());
+
+        // Verificar si está dentro del rango de proximidad
+        if (distanciaX <= 400 && distanciaY <= 10) {
+            if(!enemigo->getCurrentDirection()==deteccion){
+                enemigo->setLastDirection(enemigo->getCurrentDirection());
+            }
+            enemigo->setCurrentDirection(deteccion);
+        }
+        if (distanciaX <= 200 && distanciaY <= 10 && !colisionEnemigos1(enemigo)) {
+            qDebug() << "nivel seleccionado:" << distanciaX;
+
+            // Disparar solo si el enemigo está listo
+            if (enemigo->puedeDisparar()) {
+                // Determinar dirección del disparo
+                if (jugador->getX() > enemigo->getX()) { // Jugador a la derecha
+                    enemigo->setLastDirection(izquierda);
+                } else { // Jugador a la izquierda
+                    enemigo->setLastDirection(derecha);
+                }
+
+                // Iniciar disparo y animación
+                enemigo->setCurrentDirection(golpe);
+                enemigo->startGolpeAnimacion();
+
+                // Retrasar el próximo disparo
+                enemigo->iniciarCooldownDisparo();
+            }
+        }
     }
+
+}
+void FirstScene::dispararE1_(){
 
 }

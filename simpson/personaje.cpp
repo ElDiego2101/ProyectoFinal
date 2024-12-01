@@ -32,6 +32,21 @@ Direccion personaje::getCurrentDirection() const
 personaje::~personaje(){
 }
 
+void personaje::setCurrentDirection(Direccion newCurrentDirection)
+{
+    currentDirection = newCurrentDirection;
+}
+
+Direccion personaje::getLastDirection() const
+{
+    return lastDirection;
+}
+
+void personaje::setLastDirection(Direccion newLastDirection)
+{
+    lastDirection = newLastDirection;
+}
+
 personaje::personaje(QGraphicsItem *parent):QGraphicsPixmapItem(parent),
     x(0), y(0), dx(0), dy(0),
     frameHeight(0), frameWidth(0), // Ejemplo de tamaños de cuadro

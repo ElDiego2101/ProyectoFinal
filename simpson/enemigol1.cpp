@@ -18,12 +18,15 @@ enemigol1::enemigol1(QGraphicsItem *parent):personaje(parent) {
     //lo demas
     timerAnimacion = new QTimer(this);
     connect(timerAnimacion, &QTimer::timeout, this, &enemigol1::nextFrame);
+    //timerAnimacion->start(50);
 
     //pies para colisiones
     pies = new QGraphicsRectItem(this); // Hijo de `bob`
     pies->setRect(0,frameHeight-8,frameWidth, 2); // Rectángulo en la parte inferior
     //pies->setPen(QPen(Qt::NoPen));         // QPen para "sin borde"
    // pies->setBrush(QBrush(Qt::red)); // QBrush para "transpar
+
+    enCooldownDisparo = false;
 }
 void enemigol1::dibujarJugador() {
     int frameX = currentFrame * frameWidth; // Columna actual
@@ -47,10 +50,10 @@ void enemigol1::dibujarJugador() {
         break;
     case golpe:
         frameY=4*frameHeight;
-        if(lastDirection==derecha){
+        if(lastDirection==izquierda){
             frameX=frameWidth;
-        }else if(lastDirection==izquierda){
-            frameX=2;
+        }else if(lastDirection==derecha){
+            frameX=2*frameWidth;
 
         }
         break;
@@ -60,7 +63,7 @@ void enemigol1::dibujarJugador() {
         setPixmap(spriteSheet.copy(frameX, frameY, frameWidth, frameHeight));
 }
 void enemigol1::moverJugador(Direccion direccion){
-    if(currentDirection != direccion) {
+    if(currentDirection != direccion && currentDirection !=golpe) {
         currentDirection = direccion;
         lastDirection = (direccion == derecha || direccion == izquierda) ? direccion : lastDirection;
         currentFrame = 0;           // Reinicia la animación
@@ -85,6 +88,21 @@ void enemigol1::moverJugador(Direccion direccion){
     case abajo:
         y += desplazamiento;
         break;
+    case golpe:
+        //if(lastDirection==izquierda){
+        //    x-=2;
+        //}else if(lastDirection==derecha){
+        //    x+=2;
+
+       // }
+        break;
+    case deteccion:
+        if(lastDirection==derecha){
+            x+=desplazamiento+5;
+
+        }else if(lastDirection==izquierda){
+            x-=desplazamiento+5;
+        }
     default:
         break;
     }
@@ -109,6 +127,13 @@ void enemigol1::cambiarDireccion(){
         currentDirection = abajo;
     } else if (currentDirection == abajo) {
         currentDirection = arriba;
+    }else if(currentDirection==deteccion){
+        if(lastDirection==izquierda){
+            lastDirection=derecha;
+        }else if(lastDirection==derecha){
+            lastDirection=izquierda;
+        }
+        return;
     }
 
     lastDirection = currentDirection; // Actualizar última dirección
@@ -116,10 +141,11 @@ void enemigol1::cambiarDireccion(){
 void enemigol1::nextFrame(){
         if (currentDirection == ninguna)
             return;
-        if (currentDirection==golpe){
-            currentFrame=(currentFrame+1)%2;
-            dibujarJugador();
-            return;
+       if (currentDirection == golpe) {
+           dibujarJugador();
+            // La animación de golpe solo usa dos cuadros
+           currentFrame = (currentFrame + 1) % 2;
+           return;
         }
         dibujarJugador();
         if (currentFrame >= 4) {
@@ -127,7 +153,24 @@ void enemigol1::nextFrame(){
         }
         currentFrame = (currentFrame + 1)%5;
 }
+void enemigol1::startGolpeAnimacion() {
+   if (currentDirection == golpe && !timerAnimacion->isActive()) {
+      //  timerAnimacion->start(100); // Asegura que la animación esté activa
+    }
+}
+bool enemigol1::puedeDisparar(){
+     return !enCooldownDisparo;
 
+}
+void enemigol1::iniciarCooldownDisparo(){
+    enCooldownDisparo = true;
+    cooldownTimer.singleShot(1000, [this]() { // Cooldown de 2 segundos
+        enCooldownDisparo = false;
+    });
+}
+bool enemigol1::enCooldown(){
+    return enCooldownDisparo;
+}
 enemigol1::~enemigol1(){
     delete timerAnimacion;
     delete pies;
