@@ -2,7 +2,7 @@
 
 enemigol1::enemigol1(QGraphicsItem *parent):personaje(parent) {
     x=600;
-    y=600;
+    y=605;
 
     frameHeight = 150;
     frameWidth = 200;
@@ -64,9 +64,9 @@ void enemigol1::dibujarJugador() {
         setPixmap(spriteSheet.copy(frameX, frameY, frameWidth, frameHeight));
 }
 void enemigol1::moverJugador(Direccion direccion){
-    if(currentDirection==golpe){
-        return;
-    }
+   // if(currentDirection==golpe){
+    //    return;
+    //}
     if(currentDirection != direccion && currentDirection !=golpe) {
         currentDirection = direccion;
         lastDirection = (direccion == derecha || direccion == izquierda) ? direccion : lastDirection;
@@ -102,10 +102,10 @@ void enemigol1::moverJugador(Direccion direccion){
         break;
     case deteccion:
         if(lastDirection==derecha){
-            x+=desplazamiento+5;
+            x+=desplazamiento+4;
 
         }else if(lastDirection==izquierda){
-            x-=desplazamiento+5;
+            x-=desplazamiento+4;
         }
     default:
         break;

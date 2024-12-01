@@ -311,11 +311,11 @@ void FirstScene::establecerEnemigos1(){
             enemigo1->setY(440);
             enemigo1->setX(3200);
         }else if(var==5){
-            enemigo1->setY(600);
+            enemigo1->setY(605);
             enemigo1->setX(3000);
 
         }else if(var==6){
-            enemigo1->setY(600);
+            enemigo1->setY(605);
             enemigo1->setX(3100);
             addItem(enemigo1);
 
@@ -452,21 +452,21 @@ void FirstScene::moverEnemigo1(){
             // Si hay colisión, cambiamos la dirección del enemigo
             if(enemigo->getCurrentDirection()==derecha){
                 //enemigo->setLastDirection(derecha);
-                enemigo->setX(enemigo->getX()-5);
+                enemigo->setX(enemigo->getX()-6);
                 enemigo->setPos(enemigo->getX(),enemigo->getY());
 
             }else if(enemigo->getCurrentDirection()==izquierda){
                // enemigo->setLastDirection(izquierda);
-                enemigo->setX(enemigo->getX()+5);
+                enemigo->setX(enemigo->getX()+6);
                 enemigo->setPos(enemigo->getX(),enemigo->getY());
             }
             else if(enemigo->getCurrentDirection()==deteccion){
                 if(enemigo->getLastDirection()==izquierda){
-                    enemigo->setX(enemigo->getX()+5);
+                    enemigo->setX(enemigo->getX()+10);
                     enemigo->setPos(enemigo->getX(),enemigo->getY());
 
                 }else if(enemigo->getLastDirection()==derecha){
-                    enemigo->setX(enemigo->getX()-5);
+                    enemigo->setX(enemigo->getX()-10);
                     enemigo->setPos(enemigo->getX(),enemigo->getY());
 
                 }
@@ -546,6 +546,10 @@ void FirstScene::detecionEnemigos1(){
 
                 // Retrasar el próximo disparo
                 enemigo->iniciarCooldownDisparo();
+            }
+        }else{
+            if(enemigo->getCurrentDirection()==golpe){
+                enemigo->setCurrentDirection(deteccion);
             }
         }
     }
