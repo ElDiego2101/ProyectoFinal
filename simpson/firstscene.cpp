@@ -22,10 +22,12 @@ FirstScene::FirstScene(MainWindow *parent)
     timerGravedad->start(30);
     golpeDaño=10;
     cantidadEnemigos=6;
+    galletas.resize(3);
     // Cambia según la cantidad necesaria
     establecerCajas();
     establecerPlataformas();
     establecerEnemigos1();
+    establecerGalletas();
 
 
     //vamos a establecer los parametros del jugador
@@ -46,11 +48,9 @@ FirstScene::FirstScene(MainWindow *parent)
     colisionIzquierda=false;
 
     //inicializar el movimiento de los enemigos1
-    if (!movimientoEnemigo1) {
         movimientoEnemigo1 = new QTimer(this);
         connect(movimientoEnemigo1, &QTimer::timeout, this, &FirstScene::moverEnemigo1);
         movimientoEnemigo1->start(50); // Actualiza cada 50 ms
-    }
     //deteccion de bob por parte de los enemigos 1
     deteccionE1=new QTimer(this);
     connect(deteccionE1,&QTimer::timeout,this,&FirstScene::detecionEnemigos1);
@@ -60,6 +60,20 @@ FirstScene::FirstScene(MainWindow *parent)
     dispararE1=new QTimer(this);
     connect(dispararE1,&QTimer::timeout,this,&FirstScene::dispararE1_);
     dispararE1->start(60);
+
+    moverItems=new QTimer(this);
+    connect(moverItems,&QTimer::timeout,this,&FirstScene::moverItemsF);
+    moverItems->start(50);
+
+    //crear llave a la escena
+    llave = new QGraphicsPixmapItem(QPixmap(":/imagenes/llave.png"));
+
+    // Establecer posición inicial del Pixman
+    llave->setPos(1730, 500); // Posición X, Y en la escena
+    pixmanDirection=1;
+
+    // Agregar Pixman a la escena
+    addItem(llave);
 }
 bool FirstScene::puedeBajar() {
     QRectF rectPies = jugador->getPies()->sceneBoundingRect(); // Rectángulo global de los pies
@@ -326,6 +340,21 @@ void FirstScene::establecerEnemigos1(){
     }
 
 }
+void FirstScene::establecerGalletas(){
+    // Aseguramos que haya espacio para 3 galletas en el vector
+    int posicionesX[] = {20, 2100, 3300}; // Posiciones predeterminadas en X
+    int posicionY[] ={348,544,700}; // Todas las galletas están en la misma altura Y
+
+    for (int var = 0; var < 3; var++) {
+        QGraphicsPixmapItem* galleta = new QGraphicsPixmapItem(QPixmap(":/imagenes/galleta.png"));
+        addItem(galleta);
+        galleta->setZValue(0);
+        galleta->setPos(posicionesX[var], posicionY[var]);
+
+        // Usamos el índice para acceder al vector directamente
+        galletas[var] = galleta;
+    }
+}
 void FirstScene::establecerCajas(){
     qDebug() << "creando cajas";
 
@@ -375,6 +404,7 @@ FirstScene::~FirstScene() {
     delete timerFondo;
     delete timerGravedad;
     delete vista;
+    delete llave;
     for (auto plataforma : plataformas) {
         delete plataforma;
     }
@@ -557,4 +587,17 @@ void FirstScene::detecionEnemigos1(){
 }
 void FirstScene::dispararE1_(){
 
+}
+void FirstScene::moverItemsF(){
+    QPointF posActual = llave->pos();
+
+    // Oscilar en un rango de 10 píxeles (5 arriba y 5 abajo)
+    if (pixmanDirection == 1 && posActual.y() == 510){
+        pixmanDirection = -1; // Cambiar dirección hacia abajo
+    } else if (pixmanDirection == -1 && posActual.y() == 490) {
+        pixmanDirection = 1; // Cambiar dirección hacia arriba
+    }
+
+    // Actualizar la posición vertical
+    llave->setY(posActual.y() + pixmanDirection);
 }

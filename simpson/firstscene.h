@@ -33,7 +33,8 @@ public:
     void establecerEnemigos1();
     void moverEnemigo1();
     void dispararE1_();
-
+    void moverItemsF();
+    void establecerGalletas();
 private slots:
     void moverFondo();  // Función para manejar el movimiento del fondo
 
@@ -42,6 +43,7 @@ private:
     int cantidadEnemigos;
     int vidas;
     int puntuacion;
+    int pixmanDirection;
     bool juegoPausado;
     QGraphicsView* vista;
     QRectF rectVista;
@@ -50,7 +52,8 @@ private:
     bool colisionDerecha;
     bool colisionIzquierda;
     bool veri;
-    QGraphicsPixmapItem *fondo; // Imagen del fondo
+    QGraphicsPixmapItem *fondo;    // Imagen del fondo
+    QGraphicsPixmapItem *llave;
     int velocidadFondo;         // Velocidad del fondo
     QTimer *timerFondo;
     QTimer *timerAnimacionJugador;
@@ -59,8 +62,11 @@ private:
     QTimer* movimientoEnemigo1;
     QTimer* deteccionE1;
     QTimer* dispararE1;
+    QTimer* moverItems;
     QSet<int> teclasPresionadas;
+
     std::array<QGraphicsPixmapItem*,27> cajas;
+    std::vector<QGraphicsPixmapItem*> galletas;
     std::vector<enemigol1*> enemigos1;        // Temporizador para actualizar el fondo
     std::array<QGraphicsRectItem*, 3> plataformas;
     bob *jugador; //mi puntero a mi personaje bob patiño

@@ -13,5 +13,7 @@
         <file>imagenes/bolaPelo.png</file>
         <file>imagenes/caja.jpg</file>
         <file>imagenes/enemigoS.png</file>
+        <file>imagenes/llave.png</file>
+        <file>imagenes/galleta.png</file>
     </qresource>
 </RCC>
