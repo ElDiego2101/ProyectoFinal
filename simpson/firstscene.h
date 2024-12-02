@@ -10,6 +10,7 @@
 #include "enemigol1.h"
 #include "proyectil.h"
 #include <QSet>
+#include <QMessageBox>
 #define  Ncajas 27
 
 class MainWindow;
@@ -52,6 +53,7 @@ private:
     int vidas;
     int puntuacion;
     int pixmanDirection;
+    int pixmanDirection2;
     bool juegoPausado;
     QGraphicsView* vista;
     QRectF rectVista;
@@ -63,6 +65,7 @@ private:
     bool llaveV;
     QGraphicsPixmapItem *fondo;    // Imagen del fondo
     QGraphicsPixmapItem *llave;
+    QGraphicsPixmapItem *candado;
     int velocidadFondo;         // Velocidad del fondo
     QTimer *timerFondo;
     QTimer *timerAnimacionJugador;
@@ -72,6 +75,7 @@ private:
     QTimer* deteccionE1;
     QTimer* dispararE1;
     QTimer* moverItems;
+    QTimer* passlevel;
     proyectil* proyectilActivo; // Puntero al proyectil actual
     QTimer* timerMovimientoProyectil;
     QSet<int> teclasPresionadas;

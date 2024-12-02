@@ -41,8 +41,8 @@ FirstScene::FirstScene(MainWindow *parent)
     timerGravedad = new QTimer(this);
     connect(timerGravedad, &QTimer::timeout, this, &FirstScene::aplicarGravedad);
     timerGravedad->start(30);
-    golpeDaño=10;
-    cantidadEnemigos=6;
+    golpeDaño=30;
+    cantidadEnemigos=10;
     galletas.resize(3);
     // Cambia según la cantidad necesaria
     establecerCajas();
@@ -92,9 +92,16 @@ FirstScene::FirstScene(MainWindow *parent)
     // Establecer posición inicial del Pixman
     llave->setPos(1730, 500); // Posición X, Y en la escena
     pixmanDirection=1;
+    pixmanDirection2=1;
     // Agregar Pixman a la escena
     addItem(llave);
     llaveV=false;
+
+    candado=new QGraphicsPixmapItem(QPixmap(":/imagenes/candado.png"));
+    candado->setPos(3280,300);
+    addItem(candado);
+
+    //temporarizador de verificacion al siguiente nivel
 }
 bool FirstScene::puedeBajar() {
     QRectF rectPies = jugador->getPies()->sceneBoundingRect(); // Rectángulo global de los pies
@@ -222,16 +229,6 @@ void FirstScene::keyPressEvent(QKeyEvent *event) {
 
                 }
             }
-
-        //jugador->moverJugador(derecha);
-        //jugador->setX(jugador->getX() + 6);
-        //veri=false;
-        //if(!c2){
-           // if (!sobrePlataforma() || colisionCaja()) {
-             //   jugador->setX(posX); // Revertir movimiento
-              //  jugador->detenerJugador();
-                //velocidadFondo=0;
-               // c1=true;
         }
 
         break;
@@ -285,7 +282,7 @@ void FirstScene::keyPressEvent(QKeyEvent *event) {
     }
     }
 
-    if ((jugador->getX()<=limiteIzquierda) ||(jugador->getX()>=limiteDerecha)) {
+    if ((jugador->getX()<=limiteIzquierda) ||(jugador->getX()>=limiteDerecha)||colisionCaja()) {
         jugador->detenerJugador();
         jugador->setX(posX);
         jugador->setY(posY);
@@ -322,13 +319,7 @@ void FirstScene::keyReleaseEvent(QKeyEvent *event) {
     // Verificar qué tecla fue soltada y detener al jugador
     if (event->key() == Qt::Key_A || event->key() == Qt::Key_D) {
         velocidadFondo = 0; // Detener el fondo
-        jugador->detenerJugador();     // Detener el movimiento del jugador
-    }
-    else if (event->key() == Qt::Key_W) {
-        //enSalto = false; // Permitir saltar nuevamente después de liberar la tecla
-    }
-    else if (event->key() == Qt::Key_S) {
-        // enBajo = false; // Detener el movimiento hacia abajo
+        //jugador->detenerJugador();     // Detener el movimiento del jugador
     }
 }
 void FirstScene::establecerPlataformas(){
@@ -372,8 +363,23 @@ void FirstScene::establecerEnemigos1(){
             enemigo1->setY(605);
             enemigo1->setX(3100);
             addItem(enemigo1);
-
-        } // Agregar al vector
+        }else if(var==7){
+            enemigo1->setY(250);
+            enemigo1->setX(1300);
+            addItem(enemigo1);
+        }else if(var==8){
+            enemigo1->setY(250);
+            enemigo1->setX(1000);
+            addItem(enemigo1);
+        }else if(var==9){
+            enemigo1->setY(250);
+            enemigo1->setX(700);
+            addItem(enemigo1);
+        }else if(var==10){
+            enemigo1->setY(250);
+            enemigo1->setX(400);
+            addItem(enemigo1);
+        }
         addItem(enemigo1);
         enemigo1->setPos(enemigo1->getX(), enemigo1->getY());
         enemigos1.push_back(enemigo1);
@@ -400,7 +406,7 @@ void FirstScene::establecerCajas(){
 
     int indiceCaja = 0;
     int posicionX=110;
-    int posicionY=348;
+    int posicionY=340;
     for (int var = 0; var < 3; ++var) {
         for (int var = 0; var < 9; ++var) {
             // Crear un nuevo objeto QGraphicsPixmapItem para la caja
@@ -416,7 +422,7 @@ void FirstScene::establecerCajas(){
                 posicionY=698;
             }else if(var % 3 == 2){
                 posicionX +=600;
-                posicionY=538;
+                posicionY=530;
             }
             else{
                 posicionY-=50;
@@ -425,12 +431,12 @@ void FirstScene::establecerCajas(){
         }
         if(var==1){
             posicionX=1000;
-            posicionY=348;
+            posicionY=340;
 
         }
         if(var==2){
             posicionX=2000;
-            posicionY=348;
+            posicionY=340;
         }
 
     }
@@ -490,15 +496,16 @@ return false; // No hay colisión con ninguna caja
 void FirstScene::aplicarGravedad() {
     // Si el jugador está en salto, actualiza la posición vertical
     if (enSalto) {
-        jugador->setY(jugador->getY() + velocidadSalto); // Mover según la velocidad
-        velocidadSalto += gravedad;        // Aplicar gravedad
-        jugador->setPos(jugador->getX(), jugador->getY());
-        // Verificar si el jugador aterrizó en una plataforma
-        if (sobrePlataforma()) {
-          enSalto = false;              // Termina el salto
-          jugador->setY(jugador->getY());
-          jugador->setPos(jugador->getX(), jugador->getY());// Ajusta la posición exacta
-            velocidadSalto = 0;           // Reinicia la velocidad
+        jugador->setY(jugador->getY() + velocidadSalto);
+        velocidadSalto += gravedad;        // Mover según la velocidad
+        // Aplicar gravedad
+            jugador->setPos(jugador->getX(), jugador->getY());
+            // Verificar si el jugador aterrizó en una plataforma
+            if (sobrePlataforma()) {
+                enSalto = false;              // Termina el salto
+                jugador->setY(jugador->getY());
+                jugador->setPos(jugador->getX(), jugador->getY());// Ajusta la posición exacta
+                velocidadSalto = 0;           // Reinicia la velocidad
         }
     }else if(enBajo && puedeBajar()){
         jugador->setY(jugador->getY() + velocidadSalto); // Mover según la velocidad
@@ -740,6 +747,17 @@ void FirstScene::moverItemsF(){
         llave->setY(posActual.y() + pixmanDirection);
 
     }
+    QPointF posActual = candado->pos();
+
+    // Oscilar en un rango de 10 píxeles (5 arriba y 5 abajo)
+    if (pixmanDirection2 == 1 && posActual.y() ==310){
+        pixmanDirection2 = -1; // Cambiar dirección hacia abajo
+    } else if (pixmanDirection2 == -1 && posActual.y() == 290) {
+        pixmanDirection2 = 1; // Cambiar dirección hacia arriba
+    }
+    // Actualizar la posición vertical
+    candado->setY(posActual.y() + pixmanDirection2);
+
     colisionItems();
 
 }
@@ -751,7 +769,7 @@ void FirstScene::colisionItems(){
                     delete *it;
                     *it=nullptr;                    // Liberar memoria
                     it = galletas.erase(it); // Eliminar del vector y ajustar el iterador
-                    golpeDaño += 10;
+                    golpeDaño += 20;
                     return;                 // Incrementar el daño
                 } else {
                     ++it; // Avanzar al siguiente elemento si no hay colisión
@@ -759,7 +777,6 @@ void FirstScene::colisionItems(){
             }
             if(llave){
                 if (jugador->collidesWithItem(llave)) {
-                    qDebug() << "¡Pixman recogido!";
                     removeItem(llave); // Eliminar Pixman de la escena
                     delete llave; // Liberar memoria
                     llave=nullptr;
@@ -770,4 +787,13 @@ void FirstScene::colisionItems(){
 
             }
 }
-void FirstScene::resetGame(){}
+void FirstScene::resetGame(){
+
+}
+void FirstScene::pasarNivel(){
+    if(jugador->collidesWithItem(candado)&& llaveV){
+        qDebug() << "¡pasamos al siguiente nivel!";
+        //puedo pasar la siguiente nivel
+    }
+
+}

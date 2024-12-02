@@ -16,5 +16,6 @@
         <file>imagenes/llave.png</file>
         <file>imagenes/galleta.png</file>
         <file>imagenes/bala.png</file>
+        <file>imagenes/candado.png</file>
     </qresource>
 </RCC>
