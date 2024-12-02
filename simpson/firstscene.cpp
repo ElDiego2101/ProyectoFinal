@@ -24,7 +24,7 @@ FirstScene::FirstScene(MainWindow *parent)
             }
 
             // Eliminar el proyectil si se sale de la escena
-            if (proyectilActivo->y() > 768 || proyectilActivo->x() > 3532 || proyectilActivo->x() < 0 || colisionProyectil1(proyectilActivo)) {
+            if (proyectilActivo->y() > 768 || proyectilActivo->x() > 3532 || proyectilActivo->x() < 0 || colisionProyectil1(proyectilActivo)||colisionbalaE(proyectilActivo)) {
                 timerMovimientoProyectil->stop(); // Detener el timer
                 removeItem(proyectilActivo);     // Quitar el proyectil de la escena
                 delete proyectilActivo;         // Liberar memoria del proyectil
@@ -604,9 +604,35 @@ bool FirstScene::colisionbalaJ(proyectil* proyectil_){
         if(jugador->collidesWithItem(proyectil_)){
             return true;
         }
-        return false;
-
     }
+    return false;
+}
+bool FirstScene::colisionbalaE(proyectil *proyectil_){
+    for (auto it = enemigos1.begin(); it != enemigos1.end(); ) {
+        auto enemigo = *it;
+
+        // Verificar colisión
+        if (proyectil_->collidesWithItem(enemigo)) {
+            // Reducir vida
+            if (enemigo->getVida() > 0) {
+                enemigo->setVida(enemigo->getVida() - golpeDaño);
+            } else {
+                // Eliminar enemigo de la escena y liberar memoria
+                removeItem(enemigo);
+                delete enemigo;
+
+                // Eliminar enemigo del vector
+                it = enemigos1.erase(it);
+                continue; // Saltar a la siguiente iteración
+            }
+
+            return true; // Hubo colisión
+        }
+
+        ++it; // Avanzar al siguiente enemigo
+    }
+
+    return false; // No hubo colisión
 }
 void FirstScene::detecionEnemigos1(){
 

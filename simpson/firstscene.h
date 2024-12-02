@@ -24,10 +24,12 @@ public:
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
     void resetGame();
+    void pasarNivel();
     bool sobrePlataforma();
     bool colisionCaja();
     bool colisionEnemigos1(enemigol1* enemigo1_);
     bool colisionbalaJ(proyectil* proyectil_);
+    bool colisionbalaE(proyectil* proyectil_);
     bool choquePlataforma(proyectil* bala);
     bool puedeBajar();
     bool colisionProyectil1(proyectil* proyectil_);
