@@ -8,4 +8,6 @@ Trailer del juego: https://youtu.be/p08NmxS7zuA Informe de Responsabilidades: In
 
 video: https://youtu.be/u5xRzKZJdKM diagrama de clases actualizado: proyecto final (1).pdf
 
+[proyecto final (1).pdf](https://github.com/user-attachments/files/17986711/proyecto.final.1.pdf)
+
 profe tuvimos que hacer un commit por que teniamos un prolema con la rama y habia que organizarlo en una carpeta muchas gracias.
